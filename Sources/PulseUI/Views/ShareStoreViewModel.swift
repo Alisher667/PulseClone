@@ -9,6 +9,7 @@ import CoreData
 import Pulse
 import Combine
 
+@available(iOS 14.0, *)
 @MainActor final class ShareStoreViewModel: ObservableObject {
     // Sharing options
     @Published var sessions: Set<UUID> = []
