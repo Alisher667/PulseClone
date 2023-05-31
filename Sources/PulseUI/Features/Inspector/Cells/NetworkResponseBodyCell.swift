@@ -24,6 +24,8 @@ struct NetworkResponseBodyCell: View {
     private var destination: some View {
         if #available(iOS 14.0, *) {
             NetworkInspectorResponseBodyView(viewModel: viewModel.detailsViewModel)
+        } else {
+            Text("")
         }
     }
 }
