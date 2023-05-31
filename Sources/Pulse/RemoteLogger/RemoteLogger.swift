@@ -495,6 +495,7 @@ private extension NWBrowser.Result {
     }
 }
 
+@available(iOS 14.0, *)
 extension RemoteLogger.ConnectionState {
     var description: String {
         switch self {
@@ -505,6 +506,7 @@ extension RemoteLogger.ConnectionState {
     }
 }
 
+@available(iOS 14.0, *)
 extension RemoteLogger {
     public static let serviceType = "_pulse._tcp"
 }
