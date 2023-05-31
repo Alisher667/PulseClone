@@ -24,7 +24,11 @@ struct NetworkCURLCell: View {
         let string = TextRenderer().render(curl, role: .body2, style: .monospaced)
         let viewModel = RichTextViewModel(string: string)
         viewModel.isLinkDetectionEnabled = false
-        return RichTextView(viewModel: viewModel)
-            .navigationTitle("cURL Representation")
+        if #available(iOS 14.0, *) {
+            return RichTextView(viewModel: viewModel)
+               .navigationTitle("cURL Representation")
+        } else {
+            return RichTextView(viewModel: viewModel)
+        }
     }
 }
