@@ -39,7 +39,9 @@ struct NetworkDetailsView: View {
 }
 
 final class NetworkDetailsViewModel {
+    @available(iOS 14.0, *)
     private(set) lazy var text = makeString().map { RichTextViewModel(string: $0) }
+    
     private let makeString: () -> NSAttributedString?
 
     init(_ closure: @escaping () -> NSAttributedString?) {
