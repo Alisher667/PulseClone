@@ -17,7 +17,7 @@ struct NetworkInspectorMetricsView: View {
             NetworkInspectorTransactionView(viewModel: $0)
         }
 #else
-        List {
+        return List {
             ForEach(viewModel.transactions) {
                 NetworkInspectorTransactionView(viewModel: $0)
             }
