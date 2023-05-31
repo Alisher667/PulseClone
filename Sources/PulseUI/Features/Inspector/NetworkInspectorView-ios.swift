@@ -15,7 +15,6 @@ struct NetworkInspectorView: View {
     @State private var shareItems: ShareItems?
     @State private var isCurrentRequest = false
 
-    @available(iOS 14.0, *)
     var body: some View {
         if #available(iOS 14.0, *) {
             List {
