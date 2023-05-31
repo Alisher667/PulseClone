@@ -68,6 +68,7 @@ public struct ConsoleView: View {
 // MARK: - Previews
 
 #if DEBUG
+@available(iOS 14.0, *)
 struct ConsoleView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
