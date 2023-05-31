@@ -137,6 +137,7 @@ struct RichTextView_Previews: PreviewProvider {
     }
 }
 
+@available(iOS 14.0, *)
 private func makePreviewViewModel() -> RichTextViewModel {
     let json = try! JSONSerialization.jsonObject(with: MockJSON.allPossibleValues)
     let string = TextRenderer().render(json: json)
@@ -149,10 +150,12 @@ private func makePreviewViewModel() -> RichTextViewModel {
 }
 #endif
 
+@available(iOS 14.0, *)
 private struct TextViewSearchContextKey: EnvironmentKey {
     static var defaultValue: RichTextViewModel.SearchContext?
 }
 
+@available(iOS 14.0, *)
 extension EnvironmentValues {
     var textViewSearchContext: RichTextViewModel.SearchContext? {
         get { self[TextViewSearchContextKey.self] }
