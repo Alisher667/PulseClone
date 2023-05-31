@@ -22,7 +22,9 @@ struct NetworkRequestStatusSectionView: View {
 
     @ViewBuilder
     private var destinaitionError: some View {
-        NetworkDetailsView(title: "Error") { viewModel.errorDetailsViewModel }
+        if #available(iOS 14.0, *) {
+            NetworkDetailsView(title: "Error") { viewModel.errorDetailsViewModel }
+        }
     }
 }
 
