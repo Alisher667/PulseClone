@@ -15,6 +15,7 @@ struct NetworkInspectorView: View {
     @State private var shareItems: ShareItems?
     @State private var isCurrentRequest = false
 
+    @available(iOS 14.0, *)
     var body: some View {
         List {
             contents
@@ -68,22 +69,24 @@ struct NetworkInspectorView: View {
 
     @ViewBuilder
     private var trailingNavigationBarItems: some View {
-        PinButton(viewModel: PinButtonViewModel(task), isTextNeeded: false)
-        Menu(content: {
-            AttributedStringShareMenu(shareItems: $shareItems) {
-                TextRenderer(options: .sharing).make { $0.render(task, content: .sharing) }
-            }
-            Button(action: { shareItems = ShareItems([task.cURLDescription()]) }) {
-                Label("Share as cURL", systemImage: "square.and.arrow.up")
-            }
-        }, label: {
-            Image(systemName: "square.and.arrow.up")
-        })
-        Menu(content: {
-            ContextMenu.NetworkTaskContextMenuItems(task: task, sharedItems: $shareItems)
-        }, label: {
-            Image(systemName: "ellipsis.circle")
-        })
+        if #available(iOS 14.0, *) {
+             PinButton(viewModel: PinButtonViewModel(task), isTextNeeded: false)
+             Menu(content: {
+                 AttributedStringShareMenu(shareItems: $shareItems) {
+                     TextRenderer(options: .sharing).make { $0.render(task, content: .sharing) }
+                 }
+                 Button(action: { shareItems = ShareItems([task.cURLDescription()]) }) {
+                     Label("Share as cURL", systemImage: "square.and.arrow.up")
+                 }
+             }, label: {
+                 Image(systemName: "square.and.arrow.up")
+             })
+             Menu(content: {
+                 ContextMenu.NetworkTaskContextMenuItems(task: task, sharedItems: $shareItems)
+             }, label: {
+                 Image(systemName: "ellipsis.circle")
+             })
+        }
     }
 }
 
