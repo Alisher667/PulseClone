@@ -197,6 +197,7 @@ enum ContextMenu {
                        } else {
                        Text("")
                        }
+        }
     }
 }
 
@@ -288,5 +289,5 @@ struct StringSearchOptionsMenu_Previews: PreviewProvider {
     }
 }
 #endif
-}
+    
 #endif
