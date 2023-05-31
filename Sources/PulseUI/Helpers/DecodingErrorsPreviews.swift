@@ -40,6 +40,7 @@ struct DecodingErrors_Previews: PreviewProvider {
     } else {
         Text("")
     }
+    }
 }
 
 private func typeMismatchError() -> NetworkLogger.DecodingError {
