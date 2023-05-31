@@ -9,6 +9,7 @@ import Combine
 
 #if os(iOS)
 
+@available(iOS 14.0, *)
 struct WrappedTextView: UIViewRepresentable {
     let viewModel: RichTextViewModel
 
