@@ -24,6 +24,8 @@ struct NetworkRequestStatusSectionView: View {
     private var destinaitionError: some View {
         if #available(iOS 14.0, *) {
             NetworkDetailsView(title: "Error") { viewModel.errorDetailsViewModel }
+        } else {
+           Text("")
         }
     }
 }
