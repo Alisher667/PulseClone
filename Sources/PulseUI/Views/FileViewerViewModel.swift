@@ -11,6 +11,7 @@ import Combine
 import PDFKit
 #endif
 
+@available(iOS 14.0, *)
 final class FileViewerViewModel: ObservableObject {
     let title: String
     private let context: Context
