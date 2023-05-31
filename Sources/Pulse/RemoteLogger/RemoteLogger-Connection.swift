@@ -9,10 +9,13 @@ import Pulse
 #endif
 
 protocol RemoteLoggerConnectionDelegate: AnyObject {
+    @available(iOS 14.0, *)
     func connection(_ connection: RemoteLogger.Connection, didChangeState newState: NWConnection.State)
+    @available(iOS 14.0, *)
     func connection(_ connection: RemoteLogger.Connection, didReceiveEvent event: RemoteLogger.Connection.Event)
 }
 
+@available(iOS 14.0, *)
 extension RemoteLogger {
     final class Connection {
         var endpoint: NWEndpoint { connection.endpoint }
@@ -201,7 +204,7 @@ extension RemoteLogger {
 }
 
 // MARK: Helpers
-
+@available(iOS 14.0, *)
 extension RemoteLogger {
     static func encode(code: UInt8, body: Data) throws -> Data {
         guard body.count < UInt32.max else {
@@ -215,7 +218,7 @@ extension RemoteLogger {
         data.append(body)
         return data
     }
-
+    @available(iOS 14.0, *)
     static func decode(buffer: Data) throws -> (Connection.Packet, Int) {
         let header = try PacketHeader(data: buffer)
         guard buffer.count >= header.compressedPacketLength else {
