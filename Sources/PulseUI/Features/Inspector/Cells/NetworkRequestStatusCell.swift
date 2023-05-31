@@ -22,6 +22,7 @@ struct NetworkRequestStatusCell: View {
     }
 
 #else
+    @available(iOS 14.0, *)
     var body: some View {
         HStack(spacing: spacing) {
             Text(Image(systemName: viewModel.imageName))
@@ -32,6 +33,9 @@ struct NetworkRequestStatusCell: View {
             Spacer()
             viewModel.duration.map(DurationLabel.init)
         }
+        
+            var body: some View {
+            }
 #if os(tvOS)
         .font(.system(size: 38, weight: .bold))
         .padding(.top, 16)
