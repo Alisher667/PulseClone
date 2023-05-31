@@ -9,6 +9,7 @@ import Combine
 
 #if os(iOS)
 
+@available(iOS 14.0, *)
 public struct ConsoleView: View {
     @StateObject private var environment: ConsoleEnvironment // Never reloads
     @Environment(\.presentationMode) private var presentationMode
