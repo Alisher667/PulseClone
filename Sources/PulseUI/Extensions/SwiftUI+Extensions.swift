@@ -119,10 +119,14 @@ extension Backport {
 
 extension View {
     func inlineNavigationTitle(_ title: String) -> some View {
+        if #available(iOS 14.0, *) {
         self.navigationTitle(title)
 #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
 #endif
+        } else { 
+            return Text("")
+        }
     }
 
     func apply<T>(_ closure: (Self) -> T) -> T {
