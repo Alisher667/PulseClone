@@ -52,12 +52,14 @@ struct NetworkHeadersCell_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             List {
-                ForEach(MockTask.allEntities, id: \.objectID) { task in
-                    Section {
-                        Text(task.url ?? "–")
-                        NetworkHeadersCell(viewModel: .init(title: "Original Request Headers", headers: task.originalRequest?.headers))
-                        NetworkHeadersCell(viewModel: .init(title: "Current Request Headers", headers: task.currentRequest?.headers))
-                        NetworkHeadersCell(viewModel: .init(title: "Response Headers", headers: task.response?.headers))
+                if #available(iOS 14.0, *) {
+                    ForEach(MockTask.allEntities, id: \.objectID) { task in
+                        Section {
+                            Text(task.url ?? "–")
+                            NetworkHeadersCell(viewModel: .init(title: "Original Request Headers", headers: task.originalRequest?.headers))
+                            NetworkHeadersCell(viewModel: .init(title: "Current Request Headers", headers: task.currentRequest?.headers))
+                            NetworkHeadersCell(viewModel: .init(title: "Response Headers", headers: task.response?.headers))
+                        }
                     }
                 }
             }
