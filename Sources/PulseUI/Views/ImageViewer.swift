@@ -26,6 +26,7 @@ struct ImageViewer: View {
     }
 }
 
+@available(iOS 14.0, *)
 struct ImagePreviewViewModel {
     let image: UXImage
     let info: NSAttributedString
