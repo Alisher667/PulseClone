@@ -66,7 +66,7 @@ final class URLSessionMockingProtocol: URLProtocol {
 
     override class func canInit(with request: URLRequest) -> Bool {
         if #available(iOS 14.0, *) {
-            URLSessionMockManager.shared.getMock(for: request) != nil && RemoteLogger.shared.connectionState == .connected
+            return URLSessionMockManager.shared.getMock(for: request) != nil && RemoteLogger.shared.connectionState == .connected
         } else {
             return false
         }
