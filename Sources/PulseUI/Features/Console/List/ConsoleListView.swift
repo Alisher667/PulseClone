@@ -93,24 +93,22 @@ private struct _ConsoleListView: View {
     @State private var presentedStore: LoggerStore?
     
     var body: some View {
-        ScrollView {
-            List {
-                if isSearching {
-                    ConsoleSearchListContentView()
-                } else {
-                    ConsoleToolbarView()
-                        .listRowSeparator(.hidden, edges: .top)
-                    if store === LoggerStore.shared, let storeURL = syncSession.importedStoreURL {
-                        buttonShowImportedStore(storeURL: storeURL)
-                    }
-                    ConsoleListContentView()
+        List {
+            if isSearching {
+                ConsoleSearchListContentView()
+            } else {
+                ConsoleToolbarView()
+                    .listRowSeparator(.hidden, edges: .top)
+                if store === LoggerStore.shared, let storeURL = syncSession.importedStoreURL {
+                    buttonShowImportedStore(storeURL: storeURL)
                 }
+                ConsoleListContentView()
             }
-            .listStyle(.plain)
-            .sheet(item: $presentedStore) { store in
-                NavigationView {
-                    ConsoleView(store: store)
-                }
+        }
+        .listStyle(.plain)
+        .sheet(item: $presentedStore) { store in
+            NavigationView {
+                ConsoleView(store: store)
             }
         }
     }
@@ -162,25 +160,23 @@ private struct _ConsoleListView: View {
     
     @ViewBuilder
     private var content: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                if isSearching && !searchViewModel.parameters.isEmpty {
-                    ConsoleSearchToolbar()
-                } else {
-                    ConsoleToolbarView()
-                }
-                Divider()
-                ScrollViewReader { proxy in
-                    List(selection: $selection) {
-                        if isSearching && !searchViewModel.parameters.isEmpty {
-                            ConsoleSearchResultsListContentView()
-                        } else {
-                            ConsoleListContentView(proxy: proxy)
-                        }
+        VStack(spacing: 0) {
+            if isSearching && !searchViewModel.parameters.isEmpty {
+                ConsoleSearchToolbar()
+            } else {
+                ConsoleToolbarView()
+            }
+            Divider()
+            ScrollViewReader { proxy in
+                List(selection: $selection) {
+                    if isSearching && !searchViewModel.parameters.isEmpty {
+                        ConsoleSearchResultsListContentView()
+                    } else {
+                        ConsoleListContentView(proxy: proxy)
                     }
                 }
-                .environment(\.defaultMinListRowHeight, 1)
             }
+            .environment(\.defaultMinListRowHeight, 1)
         }
     }
 }
