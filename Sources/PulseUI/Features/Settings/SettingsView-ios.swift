@@ -8,6 +8,7 @@ import Pulse
 #if os(iOS)
 import UniformTypeIdentifiers
 
+@available(iOS 14.0, *)
 public struct SettingsView: View {
     @ObservedObject var viewModel: SettingsViewModel
 
