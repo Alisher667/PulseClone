@@ -8,6 +8,7 @@ import Network
 import Pulse
 #endif
 
+@available(iOS 14.0, *)
 extension RemoteLogger {
     enum PacketCode: UInt8, Equatable {
         // Handshake
@@ -210,6 +211,7 @@ extension RemoteLogger {
     }
 }
 
+@available(iOS 14.0, *)
 extension RemoteLogger.Connection {
     func send(code: RemoteLogger.PacketCode, data: Data) {
         send(code: code.rawValue, data: data)
