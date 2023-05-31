@@ -11,6 +11,7 @@ struct NetworkInspectorMetricsView: View {
     let viewModel: NetworkInspectorMetricsViewModel
 
     var body: some View {
+        if #available(iOS 14.0, *) {
 #if os(tvOS)
         ForEach(viewModel.transactions) {
             NetworkInspectorTransactionView(viewModel: $0)
@@ -31,6 +32,9 @@ struct NetworkInspectorMetricsView: View {
         .navigationTitle("Metrics")
 #endif
 #endif
+        } else { 
+            return Text("")
+        }
     }
 }
 
