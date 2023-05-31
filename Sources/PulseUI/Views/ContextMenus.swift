@@ -94,6 +94,7 @@ enum ContextMenu {
         @EnvironmentObject private var filters: ConsoleFiltersViewModel
 
         var body: some View {
+            if #available(iOS 14.0, *)
             Menu(content: {
                 if let host = task.host {
                     Button("Hide Host '\(host)'") {
@@ -112,6 +113,7 @@ enum ContextMenu {
             }, label: {
                 Label("Show", systemImage: "eye")
             })
+        }
         }
     }
 
