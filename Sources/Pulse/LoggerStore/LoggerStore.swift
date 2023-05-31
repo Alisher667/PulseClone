@@ -74,8 +74,10 @@ public final class LoggerStore: @unchecked Sendable, Identifiable {
     }
 
     private static func register(store: LoggerStore) {
-        if RemoteLogger.shared.store == nil {
-            RemoteLogger.shared.initialize(store: store)
+        if #available(iOS 14.0, *) {
+            if RemoteLogger.shared.store == nil {
+                RemoteLogger.shared.initialize(store: store)
+            }   
         }
     }
 
