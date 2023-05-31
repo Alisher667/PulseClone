@@ -23,7 +23,11 @@ extension Color {
 
 extension View {
     func invisible() -> some View {
-        self.hidden().accessibilityHidden(true)
+        if #available(iOS 14.0, *) {
+            self.hidden().accessibilityHidden(true)
+        } else {
+            self.hidden()
+        }
     }
 }
 
