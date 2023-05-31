@@ -37,7 +37,6 @@ struct DecodingErrors_Previews: PreviewProvider {
 #else
         return viewer
 #endif
-    }
     } else {
         Text("")
     }
