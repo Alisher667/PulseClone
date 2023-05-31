@@ -38,11 +38,13 @@ struct NetworkInspectorRequestBodyView: View {
 
 final class NetworkInspectorRequestBodyViewModel {
     private(set) lazy var fileViewModel = data.map { data in
+        if #available(iOS 14.0, *) {
         FileViewerViewModel(
             title: "Request Body",
             context: task.requestFileViewerContext,
             data: { data }
         )
+        }
     }
 
     private var data: Data? {
