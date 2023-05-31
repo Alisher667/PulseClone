@@ -256,6 +256,7 @@ private func search(searchTerm: String, in string: NSString, options: StringSear
 
 #endif
 
+@available(iOS 14.0, *)
 extension RichTextViewModel {
     struct SearchContext {
         let searchTerm: ConsoleSearchTerm
