@@ -8,9 +8,9 @@ import Pulse
 @available(iOS 14.0, *)
 struct StoreDetailsView: View {
     @StateObject private var viewModel = StoreDetailsViewModel()
-
+    
     let source: Source
-
+    
     enum Source {
         /// Loads the info when the view appears on screen.
         case store(LoggerStore)
@@ -19,7 +19,7 @@ struct StoreDetailsView: View {
         /// Displays prefetched info.
         case info(LoggerStore.Info)
     }
-
+    
     var body: some View {
         StoreDetailsContentsView(viewModel: viewModel)
             .onAppear { viewModel.load(from: source) }
@@ -31,70 +31,70 @@ struct StoreDetailsView: View {
     }
 }
 
- struct StoreDetailsContentsView: View {
-     @ObservedObject var viewModel: StoreDetailsViewModel
-     @Environment(\.store) var store
-     var isShowingActions = true
-
-     var body: some View {
-         // important: zstack fixed infinite onAppear loop on iOS 14
-         ZStack {
-             if let error = viewModel.errorMessage {
-                 PlaceholderView(imageName: "exclamationmark.circle", title: "Failed to load info", subtitle: error)
-             } else {
-                 form
-             }
-         }
-     }
-
-     @ViewBuilder
-     private var form: some View {
-         Form {
-             if #available(iOS 16.0, tvOS 16.0, macOS 13.0, watchOS 9.0, *), let info = viewModel.info {
-                 LoggerStoreSizeChart(info: info, sizeLimit: viewModel.storeSizeLimit)
+struct StoreDetailsContentsView: View {
+    @ObservedObject var viewModel: StoreDetailsViewModel
+    @Environment(\.store) var store
+    var isShowingActions = true
+    
+    var body: some View {
+        // important: zstack fixed infinite onAppear loop on iOS 14
+        ZStack {
+            if let error = viewModel.errorMessage {
+                PlaceholderView(imageName: "exclamationmark.circle", title: "Failed to load info", subtitle: error)
+            } else {
+                form
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var form: some View {
+        Form {
+            if #available(iOS 16.0, tvOS 16.0, macOS 13.0, watchOS 9.0, *), let info = viewModel.info {
+                LoggerStoreSizeChart(info: info, sizeLimit: viewModel.storeSizeLimit)
 #if os(tvOS)
-                     .padding(.vertical)
-                     .focusable()
+                    .padding(.vertical)
+                    .focusable()
 #endif
 #if os(macOS)
-                     .padding(12)
+                    .padding(12)
 #endif
-             }
-             ForEach(viewModel.sections, id: \.title) { section in
-                 ConsoleSection(header: {
+            }
+            ForEach(viewModel.sections, id: \.title) { section in
+                ConsoleSection(header: {
 #if os(macOS)
-                     SectionHeaderView(title: section.title)
+                    SectionHeaderView(title: section.title)
 #else
-                     Text(section.title)
+                    Text(section.title)
 #endif
-                 }, content: {
-                     ForEach(section.items.enumerated().map(KeyValueRow.init)) { item in
-                         InfoRow(title: item.title, details: item.details)
+                }, content: {
+                    ForEach(section.items.enumerated().map(KeyValueRow.init)) { item in
+                        InfoRow(title: item.title, details: item.details)
 #if os(tvOS)
-                             .focusable()
+                            .focusable()
 #endif
-                     }
-                 })
-             }
+                    }
+                })
+            }
 #if os(macOS)
-             if isShowingActions {
-                 ConsoleSection(header: { EmptyView() }, content: {
-                     HStack {
-                         Button("Show in Finder") {
-                             NSWorkspace.shared.activateFileViewerSelecting([store.storeURL])
-                         }
-                         if !(store.options.contains(.readonly)) {
-                             Button("Remove Logs") {
-                                 store.removeAll()
-                             }
-                         }
-                     }
-                 })
-             }
+            if isShowingActions {
+                ConsoleSection(header: { EmptyView() }, content: {
+                    HStack {
+                        Button("Show in Finder") {
+                            NSWorkspace.shared.activateFileViewerSelecting([store.storeURL])
+                        }
+                        if !(store.options.contains(.readonly)) {
+                            Button("Remove Logs") {
+                                store.removeAll()
+                            }
+                        }
+                    }
+                })
+            }
 #endif
-         }
-     }
- }
+        }
+    }
+}
 
 // MARK: - ViewModel
 
@@ -103,7 +103,7 @@ final class StoreDetailsViewModel: ObservableObject {
     @Published private(set) var sections: [KeyValueSectionViewModel] = []
     @Published private(set) var info: LoggerStore.Info?
     @Published private(set) var errorMessage: String?
-
+    
     @available(iOS 14.0, *)
     func load(from source: StoreDetailsView.Source) {
         do {
@@ -119,7 +119,7 @@ final class StoreDetailsViewModel: ObservableObject {
             errorMessage = error.localizedDescription
         }
     }
-
+    
     private func loadInfo(for store: LoggerStore) {
         do {
             let info = try store.info()
@@ -131,7 +131,7 @@ final class StoreDetailsViewModel: ObservableObject {
             self.errorMessage = error.localizedDescription
         }
     }
-
+    
     private func display(_ info: LoggerStore.Info) {
         self.info = info
         self.sections = [
@@ -139,7 +139,7 @@ final class StoreDetailsViewModel: ObservableObject {
             makeInfoSection(for: info)
         ]
     }
-
+    
     private func makeInfoSection(for info: LoggerStore.Info) -> KeyValueSectionViewModel {
         let device = info.deviceInfo
         let app = info.appInfo
@@ -148,7 +148,7 @@ final class StoreDetailsViewModel: ObservableObject {
             ("Device", "\(device.name) (\(device.systemName) \(device.systemVersion))")
         ])
     }
-
+    
     private func makeSizeSection(for info: LoggerStore.Info) -> KeyValueSectionViewModel {
         KeyValueSectionViewModel(title: "Statistics", color: .gray, items: [
             ("Created", dateFormatter.string(from: info.creationDate)),
@@ -158,7 +158,7 @@ final class StoreDetailsViewModel: ObservableObject {
             makeDecompressedRow(for: info),
         ].compactMap { $0 })
     }
-
+    
     private func makeDecompressedRow(for info: LoggerStore.Info) -> (String, String?)? {
         if info.blobsDecompressedSize == info.blobsSize {
             return nil
@@ -172,9 +172,11 @@ private let dateFormatter = DateFormatter(dateStyle: .medium, timeStyle: .medium
 #if DEBUG
 struct StoreDetailsView_Previews: PreviewProvider {
     static var previews: some View {
-    if #available(iOS 14, *) {
+        if #available(iOS 14, *) {
             StoreDetailsView(source: .store(.mock))
                 .frame(width: 280)
+        } else {
+            Text("")
         }
     }
 }

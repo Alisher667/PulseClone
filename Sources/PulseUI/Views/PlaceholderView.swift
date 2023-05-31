@@ -45,7 +45,11 @@ struct PlaceholderView: View {
 #if DEBUG
 struct PlaceholderView_Previews: PreviewProvider {
     static var previews: some View {
-        PlaceholderView(imageName: "questionmark.folder", title: "Store Unavailable")
+        if #available(iOS 14.0, *) {
+            PlaceholderView(imageName: "questionmark.folder", title: "Store Unavailable")
+        } else {
+            Text("")
+        }
     }
 }
 #endif

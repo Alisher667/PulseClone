@@ -52,16 +52,18 @@ final class NetworkRequestInfoCellViewModel {
 #if DEBUG
 struct NetworkRequestInfoCell_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
-            List {
-                ForEach(MockTask.allEntities, id: \.objectID) { task in
-                    NetworkRequestInfoCell(viewModel: .init(task: task))
+        if #available(iOS 14.0, *) {
+            NavigationView {
+                List {
+                    ForEach(MockTask.allEntities, id: \.objectID) { task in
+                        NetworkRequestInfoCell(viewModel: .init(task: task))
+                    }
                 }
-            }
 #if os(macOS)
-            .frame(width: 260)
+                .frame(width: 260)
 #endif
-        }
+            }
+        } else { Text("") }
     }
 }
 #endif

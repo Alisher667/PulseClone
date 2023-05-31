@@ -36,7 +36,11 @@ struct SettingsView: View {
 #if DEBUG
 struct UserSettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView()
+        if #available(iOS 14.0, *) {
+            SettingsView()
+        } else {
+            Text("")
+        }
     }
 }
 #endif

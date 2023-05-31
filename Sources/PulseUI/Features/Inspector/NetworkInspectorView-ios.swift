@@ -97,14 +97,18 @@ struct NetworkInspectorView: View {
 #if DEBUG
 struct NetworkInspectorView_Previews: PreviewProvider {
     static var previews: some View {
-        Group {
-            NavigationView {
-                NetworkInspectorView(task: LoggerStore.preview.entity(for: .login))
-            }.previewDisplayName("Success")
-
-            NavigationView {
-                NetworkInspectorView(task: LoggerStore.preview.entity(for: .patchRepo))
-            }.previewDisplayName("Failure")
+        if #available(iOS 14.0, *) {
+            Group {
+                NavigationView {
+                    NetworkInspectorView(task: LoggerStore.preview.entity(for: .login))
+                }.previewDisplayName("Success")
+                
+                NavigationView {
+                    NetworkInspectorView(task: LoggerStore.preview.entity(for: .patchRepo))
+                }.previewDisplayName("Failure")
+            }
+        } else {
+            Text("")
         }
     }
 }

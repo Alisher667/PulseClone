@@ -13,35 +13,39 @@ import Combine
 struct RichTextView: View {
     @ObservedObject var viewModel: RichTextViewModel
     var isTextViewBarItemsHidden = false
-
+    
     @State private var shareItems: ShareItems?
     @State private var isWebViewOpen = false
-
+    
     @Environment(\.textViewSearchContext) private var searchContext
-
+    
     func textViewBarItemsHidden(_ isHidden: Bool) -> RichTextView {
         var copy = self
         copy.isTextViewBarItemsHidden = isHidden
         return copy
     }
-
+    
 #if os(iOS)
     var body: some View {
-        contents
-            .onAppear { viewModel.prepare(searchContext) }
-            .navigationBarItems(trailing: navigationBarTrailingItems)
-            .sheet(item: $shareItems, content: ShareView.init)
-            .sheet(isPresented: $isWebViewOpen) {
-                NavigationView {
-                    WebView(data: viewModel.textStorage.string.data(using: .utf8) ?? Data(), contentType: "application/html")
-                        .inlineNavigationTitle("Browser Preview")
-                        .navigationBarItems(trailing: Button(action: {
-                            isWebViewOpen = false
-                        }) { Image(systemName: "xmark") })
+        if #available(iOS 14.0, *) {
+            contents
+                .onAppear { viewModel.prepare(searchContext) }
+                .navigationBarItems(trailing: navigationBarTrailingItems)
+                .sheet(item: $shareItems, content: ShareView.init)
+                .sheet(isPresented: $isWebViewOpen) {
+                    NavigationView {
+                        WebView(data: viewModel.textStorage.string.data(using: .utf8) ?? Data(), contentType: "application/html")
+                            .inlineNavigationTitle("Browser Preview")
+                            .navigationBarItems(trailing: Button(action: {
+                                isWebViewOpen = false
+                            }) { Image(systemName: "xmark") })
+                    }
                 }
-            }
+        } else {
+            Text("")
+        }
     }
-
+    
     @ViewBuilder
     private var contents: some View {
         if #available(iOS 15, *) {
@@ -49,16 +53,20 @@ struct RichTextView: View {
                 .searchable(text: $viewModel.searchTerm)
                 .disableAutocorrection(true)
         } else {
-            WrappedTextView(viewModel: viewModel)
-                .edgesIgnoringSafeArea(.bottom)
+            if #available(iOS 14.0, *) {
+                WrappedTextView(viewModel: viewModel)
+                    .edgesIgnoringSafeArea(.bottom)
+            } else {
+                Text("")
+            }
         }
     }
-
+    
     @available(iOS 15, *)
     private struct ContentView: View {
         @ObservedObject var viewModel: RichTextViewModel
         @Environment(\.isSearching) private var isSearching
-
+        
         var body: some View {
             WrappedTextView(viewModel: viewModel)
                 .edgesIgnoringSafeArea([.bottom])
@@ -76,30 +84,34 @@ struct RichTextView: View {
                 }
         }
     }
-
+    
     @ViewBuilder
     private var navigationBarTrailingItems: some View {
         if !isTextViewBarItemsHidden {
-            Menu(content: {
-                AttributedStringShareMenu(shareItems: $shareItems) {
-                    viewModel.textStorage
-                }
-            }, label: {
-                Image(systemName: "square.and.arrow.up")
-            })
-            // TODO: This should be injected/added outside of the text view
-            if viewModel.contentType?.isHTML ?? false {
+            if #available(iOS 14.0, *) {
                 Menu(content: {
-                    Section {
-                        if viewModel.contentType?.isHTML == true {
-                            Button(action: { isWebViewOpen = true }) {
-                                Label("Open in Browser", systemImage: "safari")
-                            }
-                        }
+                    AttributedStringShareMenu(shareItems: $shareItems) {
+                        viewModel.textStorage
                     }
                 }, label: {
-                    Image(systemName: "ellipsis.circle")
+                    Image(systemName: "square.and.arrow.up")
                 })
+            }
+            // TODO: This should be injected/added outside of the text view
+            if viewModel.contentType?.isHTML ?? false {
+                if #available(iOS 14.0, *) {
+                    Menu(content: {
+                        Section {
+                            if viewModel.contentType?.isHTML == true {
+                                Button(action: { isWebViewOpen = true }) {
+                                    Label("Open in Browser", systemImage: "safari")
+                                }
+                            }
+                        }
+                    }, label: {
+                        Image(systemName: "ellipsis.circle")
+                    })
+                }
             }
         }
     }
@@ -120,20 +132,22 @@ struct RichTextView: View {
 #if DEBUG
 struct RichTextView_Previews: PreviewProvider {
     static var previews: some View {
-        if #available(iOS 14.0, *) {
-            let textView = RichTextView(viewModel: makePreviewViewModel())
-#if os(macOS)
-        textView
-            .background(Color(.textBackgroundColor))
-            .frame(height: 600)
-            .previewLayout(.sizeThatFits)
-#else
-        NavigationView {
-            textView
-                .inlineNavigationTitle("Rich Text View")
-        }
-        #endif
-    }
+//        if #available(iOS 14.0, *) {
+//            let textView = RichTextView(viewModel: makePreviewViewModel())
+//#if os(macOS)
+//            textView
+//                .background(Color(.textBackgroundColor))
+//                .frame(height: 600)
+//                .previewLayout(.sizeThatFits)
+//#else
+//            NavigationView {
+//                textView
+//                    .inlineNavigationTitle("Rich Text View")
+//            }
+//#endif
+//        } else {
+            Text("")
+//        }
     }
 }
 
@@ -141,11 +155,11 @@ struct RichTextView_Previews: PreviewProvider {
 private func makePreviewViewModel() -> RichTextViewModel {
     let json = try! JSONSerialization.jsonObject(with: MockJSON.allPossibleValues)
     let string = TextRenderer().render(json: json)
-
+    
     let viewModel = RichTextViewModel(string: string, contentType: "application/json")
     viewModel.isLineNumberRulerEnabled = true
     viewModel.isFilterEnabled = true
-
+    
     return viewModel
 }
 #endif

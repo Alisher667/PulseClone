@@ -85,9 +85,9 @@ private func makeAttributedString(for cookies: [HTTPCookie]) -> NSAttributedStri
 #if DEBUG
 struct NetworkCookiesCell_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
-            List {
-                if #available(iOS 14.0, *) {
+        if #available(iOS 14.0, *) {
+            NavigationView {
+                List {
                     ForEach(MockTask.allEntities, id: \.objectID) { task in
                         Section {
                             let url = URL(string: task.url!)!
@@ -98,10 +98,12 @@ struct NetworkCookiesCell_Previews: PreviewProvider {
                         }
                     }
                 }
-            }
 #if os(macOS)
-            .frame(width: 260)
+                .frame(width: 260)
 #endif
+            }
+        } else {
+            Text("")
         }
     }
 }

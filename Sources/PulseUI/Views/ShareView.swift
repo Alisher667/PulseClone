@@ -168,8 +168,12 @@ struct ShareNetworkTaskView: View {
 #if DEBUG
 struct Previews_ShareView_Previews: PreviewProvider {
     static var previews: some View {
-        ShareNetworkTaskView(task: LoggerStore.demo.entity(for: .login))
-            .frame(height: 400)
+        if #available(iOS 14.0, *) {
+            ShareNetworkTaskView(task: LoggerStore.demo.entity(for: .login))
+                .frame(height: 400)
+        } else {
+            Text("")
+        }
     }
 }
 #endif

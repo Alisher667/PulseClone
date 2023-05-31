@@ -37,11 +37,15 @@ extension Checkbox where Label == Text {
 #if DEBUG
 struct Previews_CheckboxView_Previews: PreviewProvider {
     static var previews: some View {
-        List {
-            Checkbox("Checkbox", isOn: .constant(true)).disabled(false)
-            Checkbox("Checkbox", isOn: .constant(false)).disabled(false)
-            Checkbox("Checkbox", isOn: .constant(true)).disabled(true)
-            Checkbox("Checkbox", isOn: .constant(false)).disabled(true)
+        if #available(iOS 14.0, *) {
+            List {
+                Checkbox("Checkbox", isOn: .constant(true)).disabled(false)
+                Checkbox("Checkbox", isOn: .constant(false)).disabled(false)
+                Checkbox("Checkbox", isOn: .constant(true)).disabled(true)
+                Checkbox("Checkbox", isOn: .constant(false)).disabled(true)
+            }
+        } else {
+            Text("")
         }
     }
 }

@@ -81,9 +81,13 @@ private struct Series: Identifiable {
 @available(iOS 16.0, tvOS 16.0, macOS 13.0, watchOS 9.0, *)
 struct LoggerStoreSizeChart_Previews: PreviewProvider {
     static var previews: some View {
-        LoggerStoreSizeChart(info: try! LoggerStore.mock.info(), sizeLimit: 512 * 1024)
-            .padding()
-            .previewLayout(.sizeThatFits)
+        if #available(iOS 14.0, *) {
+            LoggerStoreSizeChart(info: try! LoggerStore.mock.info(), sizeLimit: 512 * 1024)
+                .padding()
+                .previewLayout(.sizeThatFits)
+        } else {
+            Text("")
+        }
     }
 }
 #endif

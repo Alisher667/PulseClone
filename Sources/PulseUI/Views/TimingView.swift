@@ -168,13 +168,17 @@ final class TimingRowViewModel: Identifiable {
 #if DEBUG
 struct TimingView_Previews: PreviewProvider {
     static var previews: some View {
-        ScrollView {
-            TimingView(viewModel: .init(sections: mockSections))
-        }
+        if #available(iOS 14.0, *) {
+            ScrollView {
+                TimingView(viewModel: .init(sections: mockSections))
+            }
             .padding()
 #if !os(tvOS)
             .previewLayout(.sizeThatFits)
 #endif
+        } else {
+            Text("")
+        }
     }
 }
 

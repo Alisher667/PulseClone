@@ -48,9 +48,17 @@ struct NetworkInspectorView: View {
     private var selectedTabView: some View {
         switch selectedTab {
         case .summary:
-            RichTextView(viewModel: .init(string: TextRenderer(options: .sharing).make { $0.render(task, content: .summary) }))
+            if #available(iOS 14.0, *) {
+                RichTextView(viewModel: .init(string: TextRenderer(options: .sharing).make { $0.render(task, content: .summary) }))
+            } else {
+                Text("")
+            }
         case .headers:
-            RichTextView(viewModel: .init(string: renderHeaders()))
+            if #available(iOS 14.0, *) {
+                RichTextView(viewModel: .init(string: renderHeaders()))
+            } else {
+                Text("")
+            }
         case .request:
             NetworkInspectorRequestBodyView(viewModel: .init(task: task))
         case .response:
@@ -62,7 +70,11 @@ struct NetworkInspectorView: View {
                 placeholder
             }
         case .curl:
-            RichTextView(viewModel: .init(string: TextRenderer().preformatted(task.cURLDescription())))
+            if #available(iOS 14.0, *) {
+                RichTextView(viewModel: .init(string: TextRenderer().preformatted(task.cURLDescription())))
+            } else {
+                Text("")
+            }
         }
     }
 
@@ -105,9 +117,13 @@ enum NetworkInspectorTab: String, Identifiable, CaseIterable, CustomStringConver
 @available(macOS 13, *)
 struct Previews_NetworkInspectorView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationStack {
-            NetworkInspectorView(task: LoggerStore.preview.entity(for: .login))
-        }.previewLayout(.fixed(width: 500, height: 800))
+        if #available(iOS 14.0, *) {
+            NavigationStack {
+                NetworkInspectorView(task: LoggerStore.preview.entity(for: .login))
+            }.previewLayout(.fixed(width: 500, height: 800))
+        } else {
+            Text("")
+        }
     }
 }
 #endif

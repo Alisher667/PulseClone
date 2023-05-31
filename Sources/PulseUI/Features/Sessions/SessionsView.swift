@@ -146,15 +146,19 @@ struct Previews_SessionsView_Previews: PreviewProvider {
     static let environment = ConsoleEnvironment(store: .mock)
 
     static var previews: some View {
+        if #available(iOS 14.0, *) {
 #if os(iOS)
-        NavigationView {
+            NavigationView {
+                SessionsView()
+                    .injecting(environment)
+            }
+#else
             SessionsView()
                 .injecting(environment)
-        }
-#else
-        SessionsView()
-            .injecting(environment)
 #endif
+        } else {
+            Text("")
+        }
     }
 }
 #endif

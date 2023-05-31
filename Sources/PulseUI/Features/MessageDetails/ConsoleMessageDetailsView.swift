@@ -103,8 +103,12 @@ struct ConsoleMessageDetailsView: View {
 @available(iOS 14.0, *)
 struct ConsoleMessageDetailsView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
-            ConsoleMessageDetailsView(message: makeMockMessage())
+        if #available(iOS 14.0, *) {
+            NavigationView {
+                ConsoleMessageDetailsView(message: makeMockMessage())
+            }
+        } else {
+            Text("")
         }
     }
 }

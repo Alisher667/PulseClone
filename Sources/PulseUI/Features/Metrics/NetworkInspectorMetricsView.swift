@@ -58,17 +58,21 @@ final class NetworkInspectorMetricsViewModel {
 #if DEBUG
 struct NetworkInspectorMetricsView_Previews: PreviewProvider {
     static var previews: some View {
+        if #available(iOS 14.0, *) {
 #if os(macOS)
-        NetworkInspectorMetricsView(viewModel: .init(
-            task: LoggerStore.preview.entity(for: .createAPI)
-        )!).previewLayout(.fixed(width: 500, height: 800))
-#else
-        NavigationView {
             NetworkInspectorMetricsView(viewModel: .init(
                 task: LoggerStore.preview.entity(for: .createAPI)
-            )!)
-        }
+            )!).previewLayout(.fixed(width: 500, height: 800))
+#else
+            NavigationView {
+                NetworkInspectorMetricsView(viewModel: .init(
+                    task: LoggerStore.preview.entity(for: .createAPI)
+                )!)
+            }
 #endif
+        } else {
+            Text("")
+        }
     }
 }
 #endif

@@ -53,8 +53,12 @@ private extension String {
 @available(iOS 14.0, *)
 struct ConsoleMessageMetadataView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
-            ConsoleMessageMetadataView(message: makeMockMessage())
+        if #available(iOS 14.0, *) {
+            NavigationView {
+                ConsoleMessageMetadataView(message: makeMockMessage())
+            }
+        } else {
+            Text("")
         }
     }
 }

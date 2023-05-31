@@ -165,8 +165,12 @@ private extension NWBrowser.Result {
 #if DEBUG
 struct RemoteLoggerSettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        RemoteLoggerSettingsView(viewModel: .shared)
-            .previewLayout(.sizeThatFits)
+        if #available(iOS 14.0, *) {
+            RemoteLoggerSettingsView(viewModel: .shared)
+                .previewLayout(.sizeThatFits)
+        } else {
+            Text("")
+        }
     }
 }
 #endif

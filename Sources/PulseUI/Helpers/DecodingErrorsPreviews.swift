@@ -12,41 +12,45 @@ import Pulse
 
 struct DecodingErrors_Previews: PreviewProvider {
     static var previews: some View {
-        Group {
-            fileViewer(error: typeMismatchError())
-                .previewDisplayName("Type Mismatch (Object)")
-            fileViewer(error: typeMismatchErrorInArray())
-                .previewDisplayName("Type Mismatch (Array)")
-            fileViewer(error: valueNotFound())
-                .previewDisplayName("Value Not Found")
-            fileViewer(error: keyNotFound())
-                .previewDisplayName("Key Not Found")
-            fileViewer(error: dataCorrupted())
-                .previewDisplayName("Data Corrupted")
+        if #available(iOS 14.0, *) {
+            Group {
+                fileViewer(error: typeMismatchError())
+                    .previewDisplayName("Type Mismatch (Object)")
+                fileViewer(error: typeMismatchErrorInArray())
+                    .previewDisplayName("Type Mismatch (Array)")
+                fileViewer(error: valueNotFound())
+                    .previewDisplayName("Value Not Found")
+                fileViewer(error: keyNotFound())
+                    .previewDisplayName("Key Not Found")
+                fileViewer(error: dataCorrupted())
+                    .previewDisplayName("Data Corrupted")
+            }
+        } else {
+            Text("")
         }
     }
-
+    
     @ViewBuilder
     private static func fileViewer(error: NetworkLogger.DecodingError) -> some View {
-    if #available(iOS 14.0, *) {
-        let viewer = FileViewer(viewModel: .init(title: "Response", context: .init(contentType: .init(rawValue: "application/json"), originalSize: 1200, error: error), data: { MockJSON.allPossibleValues }))
+        if #available(iOS 14.0, *) {
+            let viewer = FileViewer(viewModel: .init(title: "Response", context: .init(contentType: .init(rawValue: "application/json"), originalSize: 1200, error: error), data: { MockJSON.allPossibleValues }))
 #if os(iOS)
-        return NavigationView {
-            viewer
-        }
+             NavigationView {
+                viewer
+            }
 #else
-        return viewer
+            return viewer
 #endif
-    } else {
-        return Text("")
-    }
+        } else {
+            Text("")
+        }
     }
 }
 
 private func typeMismatchError() -> NetworkLogger.DecodingError {
     struct JSON: Decodable {
         let actors: [Actor]
-
+        
         struct Actor: Decodable {
             let age: String
         }
@@ -57,7 +61,7 @@ private func typeMismatchError() -> NetworkLogger.DecodingError {
 private func typeMismatchErrorInArray() -> NetworkLogger.DecodingError {
     struct JSON: Decodable {
         let actors: [Actor]
-
+        
         struct Actor: Decodable {
             let children: [Int]
         }
@@ -68,7 +72,7 @@ private func typeMismatchErrorInArray() -> NetworkLogger.DecodingError {
 private func valueNotFound() -> NetworkLogger.DecodingError {
     struct JSON: Decodable {
         let actors: [Actor]
-
+        
         struct Actor: Decodable {
             let wife: String
         }
@@ -79,7 +83,7 @@ private func valueNotFound() -> NetworkLogger.DecodingError {
 private func keyNotFound() -> NetworkLogger.DecodingError {
     struct JSON: Decodable {
         let actors: [Actor]
-
+        
         struct Actor: Decodable {
             let lastName: String
         }
@@ -90,7 +94,7 @@ private func keyNotFound() -> NetworkLogger.DecodingError {
 private func dataCorrupted() -> NetworkLogger.DecodingError {
     struct JSON: Decodable {
         let actors: [Actor]
-
+        
         struct Actor: Decodable {
             let name: URL
         }

@@ -62,9 +62,13 @@ struct NetworkInspectorView: View {
 #if DEBUG
 struct NetworkInspectorView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
-            NetworkInspectorView(task: LoggerStore.preview.entity(for: .login))
-        }.navigationViewStyle(.stack)
+        if #available(iOS 14.0, *) {
+            NavigationView {
+                NetworkInspectorView(task: LoggerStore.preview.entity(for: .login))
+            }.navigationViewStyle(.stack)
+        } else {
+            Text("")
+        }
     }
 }
 #endif

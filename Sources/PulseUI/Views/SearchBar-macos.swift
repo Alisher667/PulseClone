@@ -49,7 +49,11 @@ struct SearchBar: View {
 #if DEBUG
 struct Previews_SearchBar_macos_Previews: PreviewProvider {
     static var previews: some View {
-        SearchBarDemo().padding()
+        if #available(iOS 14.0, *) {
+            SearchBarDemo().padding()
+        } else {
+            Text("")
+        }
     }
 }
 

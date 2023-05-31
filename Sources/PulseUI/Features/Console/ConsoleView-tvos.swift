@@ -95,8 +95,12 @@ private struct ConsoleMenuView: View {
 #if DEBUG
 struct ConsoleView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
-            ConsoleView(store: .mock)
+        if #available(iOS 14.0, *) {
+            NavigationView {
+                ConsoleView(store: .mock)
+            }
+        } else {
+            Text("")
         }
     }
 }

@@ -125,16 +125,20 @@ struct ShareStoreView: View {
 @available(iOS 15, macOS 13, *)
 struct ShareStoreView_Previews: PreviewProvider {
     static var previews: some View {
+        if #available(iOS 14.0, *) {
 #if os(iOS)
-        NavigationView {
-            ShareStoreView(onDismiss: {})
-        }
-        .injecting(.init(store: .mock))
-#else
-        ShareStoreView(onDismiss: {})
+            NavigationView {
+                ShareStoreView(onDismiss: {})
+            }
             .injecting(.init(store: .mock))
-            .frame(width: 240).fixedSize()
+#else
+            ShareStoreView(onDismiss: {})
+                .injecting(.init(store: .mock))
+                .frame(width: 240).fixedSize()
 #endif
+        } else {
+            Text("")
+        }
     }
 }
 #endif

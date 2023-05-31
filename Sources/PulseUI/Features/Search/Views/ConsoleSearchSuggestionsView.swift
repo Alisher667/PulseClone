@@ -94,13 +94,17 @@ struct Previews_ConsoleSearchSuggestionsView_Previews: PreviewProvider {
     static let environment = ConsoleEnvironment(store: .mock)
 
     static var previews: some View {
-        List {
-            ConsoleSearchSuggestionsView()
+        if #available(iOS 14.0, *) {
+            List {
+                ConsoleSearchSuggestionsView()
+            }
+            .listStyle(.plain)
+            .injecting(environment)
+            .environmentObject(ConsoleSearchViewModel(environment: environment, source: ConsoleListViewModel(environment: environment, filters: .init(options: .init())), searchBar: .init()))
+            .frame(width: 340)
+        } else {
+            Text("")
         }
-        .listStyle(.plain)
-        .injecting(environment)
-        .environmentObject(ConsoleSearchViewModel(environment: environment, source: ConsoleListViewModel(environment: environment, filters: .init(options: .init())), searchBar: .init()))
-        .frame(width: 340)
     }
 }
 #endif

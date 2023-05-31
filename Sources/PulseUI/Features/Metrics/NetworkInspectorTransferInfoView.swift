@@ -113,10 +113,14 @@ private let spacing: CGFloat? = nil
 #if DEBUG
 struct NetworkInspectorTransferInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        NetworkInspectorTransferInfoView(viewModel: mockModel)
-            .padding()
-            .fixedSize()
-            .previewLayout(.sizeThatFits)
+        if #available(iOS 14.0, *) {
+            NetworkInspectorTransferInfoView(viewModel: mockModel)
+                .padding()
+                .fixedSize()
+                .previewLayout(.sizeThatFits)
+        } else {
+            Text("")
+        }
     }
 }
 

@@ -149,16 +149,20 @@ private struct ConsoleSearchListSelectionViewDemo: View {
     @State private var selection: Set<String>  = []
 
     var body: some View {
-        List {
-            ConsoleSearchListSelectionView(
-                title: "Labels",
-                items: ["Debug", "Warning", "Error"],
-                id: \.self,
-                selection: $selection,
-                description: { $0 },
-                label: { Text($0) }
-            )
-        }.listStyle(.plain)
+        if #available(iOS 14.0, *) {
+            List {
+                ConsoleSearchListSelectionView(
+                    title: "Labels",
+                    items: ["Debug", "Warning", "Error"],
+                    id: \.self,
+                    selection: $selection,
+                    description: { $0 },
+                    label: { Text($0) }
+                )
+            }.listStyle(.plain)
+        } else {
+            Text("")
+        }
     }
 }
 #endif

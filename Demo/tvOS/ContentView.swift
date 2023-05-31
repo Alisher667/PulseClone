@@ -19,6 +19,10 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        if #available(iOS 14.0, *) {
+            ContentView()
+        } else {
+            Text("")
+        }
     }
 }

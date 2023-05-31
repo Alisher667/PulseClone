@@ -30,8 +30,12 @@ struct SpinnerView: View {
 #if DEBUG
 struct SpinnerView_Previews: PreviewProvider {
     static var previews: some View {
-        SpinnerView(viewModel: .init(title: "Pending", details: "2.5 MB / 6.0 MB"))
-            .previewLayout(.fixed(width: 300, height: 300))
+        if #available(iOS 14.0, *) {
+            SpinnerView(viewModel: .init(title: "Pending", details: "2.5 MB / 6.0 MB"))
+                .previewLayout(.fixed(width: 300, height: 300))
+        } else {
+            Text("")
+        }
     }
 }
 #endif

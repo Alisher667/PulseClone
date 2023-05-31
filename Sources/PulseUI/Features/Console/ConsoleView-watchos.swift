@@ -75,10 +75,14 @@ private struct ConsoleToolbarView: View {
 #if DEBUG
 struct ConsoleView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
-            ConsoleView(store: .mock)
+        if #available(iOS 14.0, *) {
+            NavigationView {
+                ConsoleView(store: .mock)
+            }
+            .navigationViewStyle(.stack)
+        } else {
+            Text("")
         }
-        .navigationViewStyle(.stack)
     }
 }
 #endif

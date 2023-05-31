@@ -126,8 +126,12 @@ private struct _ConsoleDetailsView: View {
 #if DEBUG
 struct ConsoleView_Previews: PreviewProvider {
     static var previews: some View {
-        ConsoleView(store: .mock)
-            .previewLayout(.fixed(width: 700, height: 400))
+        if #available(iOS 14.0, *) {
+            ConsoleView(store: .mock)
+                .previewLayout(.fixed(width: 700, height: 400))
+        } else {
+            Text("")
+        }
     }
 }
 #endif

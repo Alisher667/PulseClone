@@ -118,10 +118,14 @@ extension Color {
 @available(iOS 15, *)
 struct ConsoleMessageCell_Previews: PreviewProvider {
     static var previews: some View {
-        ConsoleMessageCell(message: try! LoggerStore.mock.allMessages()[0])
-            .injecting(ConsoleEnvironment(store: .mock))
-            .padding()
-            .previewLayout(.sizeThatFits)
+        if #available(iOS 14.0, *) {
+            ConsoleMessageCell(message: try! LoggerStore.mock.allMessages()[0])
+                .injecting(ConsoleEnvironment(store: .mock))
+                .padding()
+                .previewLayout(.sizeThatFits)
+        } else {
+            Text("")
+        }
     }
 }
 #endif

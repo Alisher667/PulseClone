@@ -95,19 +95,23 @@ final class NetworkInspectorTransactionViewModel: ObservableObject, Identifiable
 #if DEBUG
 struct NetworkInspectorTransactionView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
-            List {
-                ForEach(mockTask.orderedTransactions, id: \.index) {
-                    NetworkInspectorTransactionView(viewModel: .init(transaction: $0, task: mockTask))
-                }
-            }.frame(width: 600)
-        }
+        if #available(iOS 14.0, *) {
+            NavigationView {
+                List {
+                    ForEach(mockTask.orderedTransactions, id: \.index) {
+                        NetworkInspectorTransactionView(viewModel: .init(transaction: $0, task: mockTask))
+                    }
+                }.frame(width: 600)
+            }
 #if os(macOS)
             .frame(width: 1000, height: 1000)
 #endif
 #if os(watchOS)
-        .navigationViewStyle(.stack)
+            .navigationViewStyle(.stack)
 #endif
+        } else {
+            Text("")
+        }
     }
 }
 

@@ -8,7 +8,7 @@ import SwiftUI
 import Pulse
 import Combine
 
-@available(iOS 14.0, *)
+//@available(iOS 14.0, *)
 final class RichTextViewModel: ObservableObject {
     // Search
     @Published var searchOptions: StringSearchOptions = .default
@@ -38,7 +38,7 @@ final class RichTextViewModel: ObservableObject {
     private var isSearchingInBackground = false
     private var isSearchNeeded = false
     private let queue = DispatchQueue(label: "com.github.kean.pulse.search")
-    private let settings = UserSettings.shared
+//    private let settings = UserSettings.shared
     private var cancellables = [AnyCancellable]()
 
     struct SearchMatch {
@@ -62,6 +62,7 @@ final class RichTextViewModel: ObservableObject {
             }.store(in: &cancellables)
     }
 
+    @available(iOS 14.0, *)
     func prepare(_ context: SearchContext?) {
         guard let context = context else { return }
 

@@ -12,11 +12,11 @@ enum ContextMenu {
     @available(iOS 15, *)
     struct MessageContextMenu: View {
         let message: LoggerMessageEntity
-
+        
         @Binding private(set) var shareItems: ShareItems?
-
+        
         @EnvironmentObject private var filters: ConsoleFiltersViewModel
-
+        
         var body: some View {
             Section {
                 Button(action: { shareItems = ShareService.share(message, as: .plainText) }) {
@@ -53,7 +53,7 @@ enum ContextMenu {
             }
         }
     }
-
+    
     struct NetworkTaskContextMenuItems: View {
         let task: NetworkTaskEntity
 #if os(iOS)
@@ -61,15 +61,15 @@ enum ContextMenu {
 #else
         @Binding private(set) var sharedTask: NetworkTaskEntity?
 #endif
-
+        
         @EnvironmentObject private var environment: ConsoleEnvironment
-
+        
         var body: some View {
             Section {
 #if os(iOS)
-                            if #available(iOS 14.0, *) {
-                ContextMenu.NetworkTaskShareMenu(task: task, shareItems: $sharedItems)
-                            }
+                if #available(iOS 14.0, *) {
+                    ContextMenu.NetworkTaskShareMenu(task: task, shareItems: $sharedItems)
+                }
 #else
                 Button(action: { sharedTask = task }) {
                     Label("Share...", systemImage: "square.and.arrow.up")
@@ -77,11 +77,11 @@ enum ContextMenu {
 #endif
                 ContextMenu.NetworkTaskCopyMenu(task: task)
             }
-//            if environment.mode == .network {
-//                Section {
-//                    NetworkTaskFilterMenu(task: task)
-//                }
-//            }
+            //            if environment.mode == .network {
+            //                Section {
+            //                    NetworkTaskFilterMenu(task: task)
+            //                }
+            //            }
             if let message = task.message {
                 Section {
                     PinButton(viewModel: .init(message))
@@ -89,48 +89,48 @@ enum ContextMenu {
             }
         }
     }
-
+    
     struct NetworkTaskFilterMenu: View {
         let task: NetworkTaskEntity
-
+        
         @EnvironmentObject private var filters: ConsoleFiltersViewModel
-
+        
         var body: some View {
             if #available(iOS 14.0, *) {
-            Menu(content: {
-                if let host = task.host {
-                    Button("Hide Host '\(host)'") {
-                        filters.criteria.network.host.hidden.insert(host)
+                Menu(content: {
+                    if let host = task.host {
+                        Button("Hide Host '\(host)'") {
+                            filters.criteria.network.host.hidden.insert(host)
+                        }
                     }
-                }
-            }, label: {
-                Label("Hide", systemImage: "eye.slash")
-            })
-            Menu(content: {
-                if let host = task.host {
-                    Button("Show Host '\(host)'") {
-                        filters.criteria.network.host.focused = host
+                }, label: {
+                    Label("Hide", systemImage: "eye.slash")
+                })
+                Menu(content: {
+                    if let host = task.host {
+                        Button("Show Host '\(host)'") {
+                            filters.criteria.network.host.focused = host
+                        }
                     }
-                }
-            }, label: {
-                Label("Show", systemImage: "eye")
-            })
-        }
+                }, label: {
+                    Label("Show", systemImage: "eye")
+                })
+            }
         }
     }
-
+    
     struct NetworkTaskShareMenu: View {
         let task: NetworkTaskEntity
         @Binding var shareItems: ShareItems?
-
+        
         var body: some View {
             if #available(iOS 14.0, *) {
-            Menu(content: content) {
-                Label("Share...", systemImage: "square.and.arrow.up")
-            }
+                Menu(content: content) {
+                    Label("Share...", systemImage: "square.and.arrow.up")
+                }
             }
         }
-
+        
         @ViewBuilder
         private func content() -> some View {
             AttributedStringShareMenu(shareItems: $shareItems) {
@@ -138,65 +138,65 @@ enum ContextMenu {
                     $0.render(task, content: .sharing)
                 }
             }
-                                        if #available(iOS 14.0, *) {
-            Button(action: { shareItems = ShareItems([task.cURLDescription()]) }) {
-                Label("Share as cURL", systemImage: "square.and.arrow.up")
+            if #available(iOS 14.0, *) {
+                Button(action: { shareItems = ShareItems([task.cURLDescription()]) }) {
+                    Label("Share as cURL", systemImage: "square.and.arrow.up")
+                }
             }
-                                        }
         }
     }
-
+    
     struct NetworkTaskCopyMenu: View {
         let task: NetworkTaskEntity
-
+        
         var body: some View {
-                        if #available(iOS 14.0, *) {
-            Menu(content: content) {
-                Label("Copy", systemImage: "doc.on.doc")
+            if #available(iOS 14.0, *) {
+                Menu(content: content) {
+                    Label("Copy", systemImage: "doc.on.doc")
+                }
             }
-                        }
         }
-
+        
         @ViewBuilder
         func content() -> some View {
-                       if #available(iOS 14.0, *) {
-            if let url = task.url {
-                Button(action: {
-                    UXPasteboard.general.string = url
-                    runHapticFeedback()
-                }) {
-                    Label("Copy URL", systemImage: "doc.on.doc")
+            if #available(iOS 14.0, *) {
+                if let url = task.url {
+                    Button(action: {
+                        UXPasteboard.general.string = url
+                        runHapticFeedback()
+                    }) {
+                        Label("Copy URL", systemImage: "doc.on.doc")
+                    }
                 }
-            }
-            if let host = task.host {
-                Button(action: {
-                    UXPasteboard.general.string = host
-                    runHapticFeedback()
-                }) {
-                    Label("Copy Host", systemImage: "doc.on.doc")
+                if let host = task.host {
+                    Button(action: {
+                        UXPasteboard.general.string = host
+                        runHapticFeedback()
+                    }) {
+                        Label("Copy Host", systemImage: "doc.on.doc")
+                    }
                 }
-            }
-            if task.requestBodySize > 0 {
-                Button(action: {
-                    guard let data = task.requestBody?.data else { return }
-                    UXPasteboard.general.string = String(data: data, encoding: .utf8)
-                    runHapticFeedback()
-                }) {
-                    Label("Copy Request", systemImage:"arrow.up.circle")
+                if task.requestBodySize > 0 {
+                    Button(action: {
+                        guard let data = task.requestBody?.data else { return }
+                        UXPasteboard.general.string = String(data: data, encoding: .utf8)
+                        runHapticFeedback()
+                    }) {
+                        Label("Copy Request", systemImage:"arrow.up.circle")
+                    }
                 }
-            }
-            if task.responseBodySize > 0 {
-                Button(action: {
-                    guard let data = task.responseBody?.data else { return }
-                    UXPasteboard.general.string = String(data: data, encoding: .utf8)
-                    runHapticFeedback()
-                }) {
-                    Label("Copy Response", systemImage: "arrow.down.circle")
+                if task.responseBodySize > 0 {
+                    Button(action: {
+                        guard let data = task.responseBody?.data else { return }
+                        UXPasteboard.general.string = String(data: data, encoding: .utf8)
+                        runHapticFeedback()
+                    }) {
+                        Label("Copy Response", systemImage: "arrow.down.circle")
+                    }
                 }
+            } else {
+                Text("")
             }
-                       } else {
-                       Text("")
-                       }
         }
     }
 }
@@ -204,7 +204,7 @@ enum ContextMenu {
 struct StringSearchOptionsMenu: View {
     @Binding private(set) var options: StringSearchOptions
     var isKindNeeded = true
-
+    
 #if os(macOS)
     var body: some View {
         Menu(content: { contents }, label: {
@@ -220,7 +220,7 @@ struct StringSearchOptionsMenu: View {
         contents
     }
 #endif
-
+    
     @ViewBuilder
     private var contents: some View {
         Picker("Kind", selection: $options.kind) {
@@ -246,48 +246,50 @@ struct StringSearchOptionsMenu: View {
 struct AttributedStringShareMenu: View {
     @Binding var shareItems: ShareItems?
     let string: () -> NSAttributedString
-
+    
     var body: some View {
-                    if #available(iOS 14.0, *) {
-        Button(action: { shareItems = ShareService.share(string(), as: .plainText) }) {
-            Label("Share as Text", systemImage: "square.and.arrow.up")
-        }
-        Button(action: { shareItems = ShareService.share(string(), as: .html) }) {
-            Label("Share as HTML", systemImage: "square.and.arrow.up")
-        }
+        if #available(iOS 14.0, *) {
+            Button(action: { shareItems = ShareService.share(string(), as: .plainText) }) {
+                Label("Share as Text", systemImage: "square.and.arrow.up")
+            }
+            Button(action: { shareItems = ShareService.share(string(), as: .html) }) {
+                Label("Share as HTML", systemImage: "square.and.arrow.up")
+            }
 #if os(iOS)
-        Button(action: { shareItems = ShareService.share(string(), as: .pdf) }) {
-            Label("Share as PDF", systemImage: "square.and.arrow.up")
-        }
+            Button(action: { shareItems = ShareService.share(string(), as: .pdf) }) {
+                Label("Share as PDF", systemImage: "square.and.arrow.up")
+            }
 #endif
-                    }
+        }
     }
 }
 
 #if DEBUG
 struct StringSearchOptionsMenu_Previews: PreviewProvider {
     static var previews: some View {
-                    if #available(iOS 14.0, *) {
-        VStack(spacing: 32) {
-            Spacer()
-            Menu(content: {
-                AttributedStringShareMenu(shareItems: .constant(nil)) {
-                    TextRenderer(options: .sharing).make { $0.render(LoggerStore.preview.entity(for: .login), content: .sharing) }
+        if #available(iOS 14.0, *) {
+            VStack(spacing: 32) {
+                Spacer()
+                Menu(content: {
+                    AttributedStringShareMenu(shareItems: .constant(nil)) {
+                        TextRenderer(options: .sharing).make { $0.render(LoggerStore.preview.entity(for: .login), content: .sharing) }
+                    }
+                }) {
+                    Text("Attributed String Share")
                 }
-            }) {
-                Text("Attributed String Share")
-            }
-            Menu(content: {
-                Section(header: Label("Search Options", systemImage: "magnifyingglass")) {
-                    StringSearchOptionsMenu(options: .constant(.default))
+                Menu(content: {
+                    Section(header: Label("Search Options", systemImage: "magnifyingglass")) {
+                        StringSearchOptionsMenu(options: .constant(.default))
+                    }
+                }) {
+                    Text("Search Options")
                 }
-            }) {
-                Text("Search Options")
             }
+        } else {
+            Text("")
         }
-    }
     }
 }
 #endif
-    
+
 #endif

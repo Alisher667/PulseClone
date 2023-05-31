@@ -11,16 +11,16 @@ import CoreData
 struct ConsoleTaskCell: View {
     @ObservedObject var task: NetworkTaskEntity
     var isDisclosureNeeded = false
-
+    
     @ObservedObject private var settings: UserSettings = .shared
-
+    
     var body: some View {
 #if os(macOS)
         let spacing: CGFloat = 3
 #else
         let spacing: CGFloat = 6
 #endif
-
+        
         let contents = VStack(alignment: .leading, spacing: spacing) {
             title.dynamicTypeSize(...DynamicTypeSize.xxxLarge)
             message
@@ -41,7 +41,7 @@ struct ConsoleTaskCell: View {
         }
 #endif
     }
-
+    
     private var title: some View {
         HStack {
             (Text(Image(systemName: task.state.iconSystemName)) + Text(" " + ConsoleFormatter.status(for: task)))
@@ -66,7 +66,7 @@ struct ConsoleTaskCell: View {
 #endif
         }
     }
-
+    
     private var time: some View {
         Text(ConsoleMessageCell.timeFormatter.string(from: task.createdAt))
             .lineLimit(1)
@@ -74,14 +74,14 @@ struct ConsoleTaskCell: View {
             .foregroundColor(.secondary)
             .monospacedDigit()
     }
-
+    
     private var message: some View {
         Text(task.url ?? "–")
             .font(ConsoleConstants.fontBody)
             .foregroundColor(.primary)
             .lineLimit(settings.lineLimit)
     }
-
+    
     private var details: some View {
 #if os(watchOS)
         HStack {
@@ -104,7 +104,7 @@ struct ConsoleTaskCell: View {
             .foregroundColor(.secondary)
 #endif
     }
-
+    
     private var infoText: Text {
         var text = Text(task.httpMethod ?? "GET")
         if task.state != .pending {
@@ -115,11 +115,11 @@ struct ConsoleTaskCell: View {
         }
         return text
     }
-
+    
     private func makeInfoText(_ image: String, _ text: String) -> Text {
         Text(Image(systemName: image)).fontWeight(.light) + Text(" " + text)
     }
-
+    
     private func byteCount(for size: Int64) -> String {
         guard size > 0 else { return "0 KB" }
         return ByteCountFormatter.string(fromByteCount: size)
@@ -135,14 +135,14 @@ private let infoSpacing: CGFloat = 14
 private struct ConsoleProgressText: View {
     let title: String
     @ObservedObject var viewModel: ProgressViewModel
-
+    
     var body: some View {
         (Text(title) +
          Text("   ") +
          Text(viewModel.details ?? ""))
-            .font(ConsoleConstants.fontBody.smallCaps())
-            .lineLimit(1)
-            .foregroundColor(.secondary)
+        .font(ConsoleConstants.fontBody.smallCaps())
+        .lineLimit(1)
+        .foregroundColor(.secondary)
     }
 }
 
@@ -150,9 +150,13 @@ private struct ConsoleProgressText: View {
 @available(iOS 15, *)
 struct ConsoleTaskCell_Previews: PreviewProvider {
     static var previews: some View {
-        ConsoleTaskCell(task: LoggerStore.preview.entity(for: .login))
-            .padding()
-            .previewLayout(.sizeThatFits)
+        if #available(iOS 14.0, *) {
+            ConsoleTaskCell(task: LoggerStore.preview.entity(for: .login))
+                .padding()
+                .previewLayout(.sizeThatFits)
+        } else {
+            Text("")
+        }
     }
 }
 #endif

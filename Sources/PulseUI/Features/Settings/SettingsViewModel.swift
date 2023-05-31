@@ -20,7 +20,11 @@ final class SettingsViewModel: ObservableObject {
     private var cancellables: [AnyCancellable] = []
 
     var isRemoteLoggingAvailable: Bool {
-        store === RemoteLogger.shared.store
+        if #available(iOS 14.0, *) {
+            return store === RemoteLogger.shared.store
+        } else {
+            return false
+        }
     }
 
     init(store: LoggerStore) {

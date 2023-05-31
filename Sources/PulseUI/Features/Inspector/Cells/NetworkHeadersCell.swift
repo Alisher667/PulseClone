@@ -8,7 +8,7 @@ import Pulse
 @available(iOS 14.0, *)
 struct NetworkHeadersCell: View {
     let viewModel: NetworkHeadersCellViewModel
-
+    
     var body: some View {
         NavigationLink(destination: destination) {
             NetworkMenuCell(
@@ -21,7 +21,7 @@ struct NetworkHeadersCell: View {
         .foregroundColor(viewModel.isEnabled ? nil : .secondary)
         .disabled(!viewModel.isEnabled)
     }
-
+    
     private var destination: some View {
         NetworkDetailsView(title: viewModel.title) { viewModel.detailsViewModel }
     }
@@ -31,13 +31,13 @@ struct NetworkHeadersCellViewModel {
     let title: String
     let details: String
     let isEnabled: Bool
-
+    
     var detailsViewModel: KeyValueSectionViewModel {
         KeyValueSectionViewModel.makeHeaders(title: title, headers: headers)
     }
-
+    
     private let headers: [String: String]
-
+    
     init(title: String, headers: [String: String]?) {
         self.title = title
         let headers = headers ?? [:]
@@ -50,9 +50,9 @@ struct NetworkHeadersCellViewModel {
 #if DEBUG
 struct NetworkHeadersCell_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
-            List {
-                if #available(iOS 14.0, *) {
+        if #available(iOS 14.0, *) {
+            NavigationView {
+                List {
                     ForEach(MockTask.allEntities, id: \.objectID) { task in
                         Section {
                             Text(task.url ?? "–")
@@ -62,10 +62,12 @@ struct NetworkHeadersCell_Previews: PreviewProvider {
                         }
                     }
                 }
-            }
 #if os(macOS)
-            .frame(width: 260)
+                .frame(width: 260)
 #endif
+            }
+        } else {
+            Text("")
         }
     }
 }
