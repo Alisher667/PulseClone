@@ -17,7 +17,11 @@ struct PinButton: View {
     var body: some View {
         Button(action: viewModel.togglePin) {
             if isTextNeeded {
-                Label(viewModel.isPinned ? "Unpin" : "Pin", systemImage: viewModel.isPinned ? "pin.fill" : "pin")
+                if #available(iOS 14.0, *) {
+                    Label(viewModel.isPinned ? "Unpin" : "Pin", systemImage: viewModel.isPinned ? "pin.fill" : "pin")
+                } else {
+                    Text("")
+                }
             } else {
                 Image(systemName: viewModel.isPinned ? "pin.fill" : "pin")
             }
