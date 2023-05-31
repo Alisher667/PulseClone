@@ -8,6 +8,7 @@ import Pulse
 extension NetworkInspectorView {
     @ViewBuilder
     static func makeRequestSection(task: NetworkTaskEntity, isCurrentRequest: Bool) -> some View {
+    if #available(iOS 14.0, *) {
         let url = URL(string: task.url ?? "")
         NetworkRequestBodyCell(viewModel: .init(task: task))
         if isCurrentRequest {
@@ -17,22 +18,31 @@ extension NetworkInspectorView {
             NetworkHeadersCell(viewModel: .init(title: "Request Headers", headers: task.originalRequest?.headers))
             NetworkCookiesCell(viewModel: .init(title: "Request Cookies", headers: task.originalRequest?.headers, url: url))
         }
+    } else {
+        Text("")
+    }
     }
 
     @ViewBuilder
     static func makeResponseSection(task: NetworkTaskEntity) -> some View {
         let url = URL(string: task.url ?? "")
+        if #available(iOS 14.0, *) {
         NetworkResponseBodyCell(viewModel: .init(task: task))
         NetworkHeadersCell(viewModel: .init(title: "Response Headers", headers: task.response?.headers))
         NetworkCookiesCell(viewModel: .init(title: "Response Cookies", headers: task.response?.headers, url: url))
-    }
+        } else { 
+           Text("")
+        }
+    }   
 
     @ViewBuilder
     static func makeHeaderView(task: NetworkTaskEntity) -> some View {
         ZStack {
-            NetworkInspectorTransferInfoView(viewModel: .init(empty: true))
+            if #available(iOS 14.0, *) {
+                NetworkInspectorTransferInfoView(viewModel: .init(empty: true))
                 .hidden()
                 .accessibilityHidden(true)
+            }
             if task.hasMetrics {
                 NetworkInspectorTransferInfoView(viewModel: .init(task: task))
             } else if task.state == .pending {
