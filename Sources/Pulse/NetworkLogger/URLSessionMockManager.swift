@@ -31,8 +31,10 @@ final class URLSessionMockingProtocol: URLProtocol {
             client?.urlProtocol(self, didFailWithError: URLError(.unknown)) // Should never happen
             return
         }
-        RemoteLogger.shared.getMockedResponse(for: mock) { [weak self] in
-            self?.didReceiveResponse($0)
+        if #available(iOS 14.0, *) {
+            RemoteLogger.shared.getMockedResponse(for: mock) { [weak self] in
+                self?.didReceiveResponse($0)
+            }
         }
     }
 
@@ -63,7 +65,11 @@ final class URLSessionMockingProtocol: URLProtocol {
     }
 
     override class func canInit(with request: URLRequest) -> Bool {
-        URLSessionMockManager.shared.getMock(for: request) != nil && RemoteLogger.shared.connectionState == .connected
+        if #available(iOS 14.0, *) {
+            URLSessionMockManager.shared.getMock(for: request) != nil && RemoteLogger.shared.connectionState == .connected
+        } else {
+            return false
+        }
     }
 }
 
