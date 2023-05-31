@@ -70,6 +70,7 @@ private struct ConsoleSortByMenu: View {
     @EnvironmentObject private var environment: ConsoleEnvironment
 
     var body: some View {
+        if #available(iOS 14.0, *) {
         Menu(content: {
             if environment.mode == .network {
                 Picker("Sort By", selection: $environment.listOptions.taskSortBy) {
@@ -91,6 +92,7 @@ private struct ConsoleSortByMenu: View {
         }, label: {
             Label("Sort By", systemImage: "arrow.up.arrow.down")
         })
+        }
     }
 }
 #endif
@@ -102,6 +104,7 @@ struct ConsoleGroupByMenu: View {
     @EnvironmentObject private var environment: ConsoleEnvironment
 
     var body: some View {
+        if #available(iOS 14.0, *)
         Menu(content: {
             if environment.mode == .network {
                 Picker("Group By", selection: $environment.listOptions.taskGroupBy) {
@@ -138,6 +141,7 @@ struct ConsoleGroupByMenu: View {
         }, label: {
             Label("Group By", systemImage: "rectangle.3.group")
         })
+    }
     }
 }
 #endif
