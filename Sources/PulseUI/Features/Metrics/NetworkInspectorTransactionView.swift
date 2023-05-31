@@ -49,7 +49,11 @@ struct NetworkInspectorTransactionView: View {
     }
 
     private var destintionTransactionDetails: some View {
-        NetworkDetailsView(title: "Transaction Details") { viewModel.details() }
+        if #available(iOS 14.0, *) {
+            return NetworkDetailsView(title: "Transaction Details") { viewModel.details() }
+        } else {
+            return Text("")
+        }
     }
 }
 
