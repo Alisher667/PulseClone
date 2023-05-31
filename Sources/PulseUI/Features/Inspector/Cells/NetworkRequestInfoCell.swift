@@ -22,9 +22,9 @@ struct NetworkRequestInfoCell: View {
 
     private var destinationRequestDetails: some View {
         if #available(iOS 14.0, *) {
-            NetworkDetailsView(title: "Request") { viewModel.render() }
+            return NetworkDetailsView(title: "Request") { viewModel.render() }
         } else {
-            Text("")
+            return Text("")
         }
     }
 }
