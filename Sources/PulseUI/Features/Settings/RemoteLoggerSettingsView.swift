@@ -8,6 +8,7 @@ import Combine
 import Pulse
 import Network
 
+@available(iOS 14.0, *)
 struct RemoteLoggerSettingsView: View {
     @ObservedObject var viewModel: RemoteLoggerSettingsViewModel
     
@@ -89,6 +90,7 @@ struct RemoteLoggerSettingsView: View {
     }
 }
 
+@available(iOS 14.0, *)
 final class RemoteLoggerSettingsViewModel: ObservableObject {
     @Published var isEnabled: Bool = false
     @Published var servers: [RemoteLoggerServerViewModel] = []
