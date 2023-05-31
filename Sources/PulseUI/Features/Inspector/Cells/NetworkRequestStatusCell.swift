@@ -33,9 +33,10 @@ struct NetworkRequestStatusCell: View {
             Spacer()
             viewModel.duration.map(DurationLabel.init)
         }
+    }
         
-            var body: some View {
-            }
+    var body: some View {
+    }
 #if os(tvOS)
         .font(.system(size: 38, weight: .bold))
         .padding(.top, 16)
