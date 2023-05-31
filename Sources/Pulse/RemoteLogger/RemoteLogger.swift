@@ -12,6 +12,7 @@ import SwiftUI
 ///
 /// The logger is thread-safe. The updates to the `Published` properties will
 /// be delivered on a background queue.
+@available(iOS 14.0, *)
 public final class RemoteLogger: RemoteLoggerConnectionDelegate {
     public private(set) var store: LoggerStore?
 
