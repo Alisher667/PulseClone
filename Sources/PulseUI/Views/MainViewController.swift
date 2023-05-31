@@ -21,11 +21,13 @@ public final class MainViewController: UIViewController {
         if MainViewController.isAutomaticAppearanceOverrideRemovalEnabled {
             removeAppearanceOverrides()
         }
+        if #available(iOS 14.0, *) {
         let console = ConsoleView(environment: environment)
         let vc = UIHostingController(rootView: NavigationView { console })
         addChild(vc)
         view.addSubview(vc.view)
         vc.view.pinToSuperview()
+        }
     }
 
     required init?(coder: NSCoder) {
