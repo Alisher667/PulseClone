@@ -5,6 +5,7 @@
 import SwiftUI
 import Pulse
 
+@available(iOS 14.0, *)
 struct NetworkResponseBodyCell: View {
     let viewModel: NetworkResponseBodyCellViewModel
 
@@ -22,14 +23,11 @@ struct NetworkResponseBodyCell: View {
     }
 
     private var destination: some View {
-        if #available(iOS 14.0, *) {
-            return NetworkInspectorResponseBodyView(viewModel: viewModel.detailsViewModel)
-        } else {
-            return Text("")
-        }
+        return NetworkInspectorResponseBodyView(viewModel: viewModel.detailsViewModel)
     }
 }
 
+@available(iOS 14.0, *)
 struct NetworkResponseBodyCellViewModel {
     let details: String
     let isEnabled: Bool
