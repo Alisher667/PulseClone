@@ -161,7 +161,9 @@ final class TextRenderer {
     private func renderLargeHeader(for task: NetworkTaskEntity) {
         let status = NetworkRequestStatusCellModel(task: task)
 
-        string.append(render(status.title + "\n", role: .title, weight: .semibold, color: UXColor(status.tintColor)))
+        if #available(iOS 14.0, *) {
+            string.append(render(status.title + "\n", role: .title, weight: .semibold, color: UXColor(status.tintColor)))
+        }
         string.append(self.spacer())
         var urlAttributes = helper.attributes(role: .body2, weight: .regular)
         urlAttributes[.underlineColor] = UXColor.clear
@@ -203,7 +205,9 @@ final class TextRenderer {
         do {
             let status = NetworkRequestStatusCellModel(transaction: transaction)
             let method = transaction.request.httpMethod ?? "GET"
-            string.append(render(status.title + "\n", role: .title, weight: .semibold, color: UXColor(status.tintColor)))
+            if #available(iOS 14.0, *) {
+                string.append(render(status.title + "\n", role: .title, weight: .semibold, color: UXColor(status.tintColor)))
+            }
             string.append(self.spacer())
             var urlAttributes = helper.attributes(role: .body2, weight: .regular)
             urlAttributes[.underlineColor] = UXColor.clear
@@ -375,7 +379,9 @@ final class TextRenderer {
             output.addAttribute(.foregroundColor, value: UXColor.secondaryLabel, range: range)
 #else
             if options.color == .full {
-                output.addAttribute(.foregroundColor, value: UXColor(color), range: range)
+                if #available(iOS 14.0, *) {
+                    output.addAttribute(.foregroundColor, value: UXColor(color), range: range)
+                }
             }
 #endif
         }
@@ -421,26 +427,27 @@ struct ConsoleTextRenderer_Previews: PreviewProvider {
             let string = TextRenderer(options: .sharing).make { $0.render(task, content: .sharing) }
             let stringWithColor = TextRenderer(options: .init(color: .full)).make { $0.render(task, content: .all) }
             let html = try! TextUtilities.html(from: TextRenderer(options: .sharing).make { $0.render(task, content: .sharing) })
-
-            RichTextView(viewModel: .init(string: string))
-                .previewDisplayName("Task")
-
-            RichTextView(viewModel: .init(string: TextRenderer(options: .sharing).make { $0.render(task, content: .sharing) }))
-                .previewDisplayName("Task (Share)")
-
-            RichTextView(viewModel: .init(string: stringWithColor))
-                .previewDisplayName("Task (Color)")
-
-            RichTextView(viewModel: .init(string: NSAttributedString(string: ShareStoreTask(entities: try! LoggerStore.mock.allMessages(), store: .mock, output: .plainText, completion: { _ in }).share().items[0] as! String)))
-                .previewDisplayName("Task (Plain)")
-
-            RichTextView(viewModel: .init(string: TextRenderer(options: .sharing).make { $0.render(task.orderedTransactions[0]) } ))
-                .previewDisplayName("Transaction")
-
-            RichTextView(viewModel: .init(string: TextRendererHTML(html: String(data: html, encoding: .utf8)!).render()))
-                .previewLayout(.fixed(width: 1160, height: 2000)) // Disable interaction to view it
-                .previewDisplayName("HTML (Raw)")
-
+            
+            if #available(iOS 14.0, *) {
+                RichTextView(viewModel: .init(string: string))
+                    .previewDisplayName("Task")
+    
+                RichTextView(viewModel: .init(string: TextRenderer(options: .sharing).make { $0.render(task, content: .sharing) }))
+                    .previewDisplayName("Task (Share)")
+    
+                RichTextView(viewModel: .init(string: stringWithColor))
+                    .previewDisplayName("Task (Color)")
+    
+                RichTextView(viewModel: .init(string: NSAttributedString(string: ShareStoreTask(entities: try! LoggerStore.mock.allMessages(), store: .mock, output: .plainText, completion: { _ in }).share().items[0] as! String)))
+                    .previewDisplayName("Task (Plain)")
+    
+                RichTextView(viewModel: .init(string: TextRenderer(options: .sharing).make { $0.render(task.orderedTransactions[0]) } ))
+                    .previewDisplayName("Transaction")
+    
+                RichTextView(viewModel: .init(string: TextRendererHTML(html: String(data: html, encoding: .utf8)!).render()))
+                    .previewLayout(.fixed(width: 1160, height: 2000)) // Disable interaction to view it
+                    .previewDisplayName("HTML (Raw)")
+            }
 #if os(iOS) || os(macOS)
             WebView(data: html, contentType: "application/html")
                 .edgesIgnoringSafeArea([.bottom])
