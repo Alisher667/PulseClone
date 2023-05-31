@@ -52,20 +52,22 @@ struct ConsoleSectionHeader: View {
     }
 #elseif os(iOS)
     var body: some View {
-        HStack {
-            Text(title)
-            if !isDefault {
-                Button(action: reset) {
-                    Image(systemName: "arrow.uturn.left")
+        if #available(iOS 14.0, *) {
+            HStack {
+                Text(title)
+                if !isDefault {
+                    Button(action: reset) {
+                        Image(systemName: "arrow.uturn.left")
+                    }
+                    .padding(.bottom, 3)
+                } else {
+                    Button(action: {}) {
+                        Image(systemName: "arrow.uturn.left")
+                    }
+                    .padding(.bottom, 3)
+                    .hidden()
+                    .accessibilityHidden(true)
                 }
-                .padding(.bottom, 3)
-            } else {
-                Button(action: {}) {
-                    Image(systemName: "arrow.uturn.left")
-                }
-                .padding(.bottom, 3)
-                .hidden()
-                .accessibilityHidden(true)
             }
         }
     }
