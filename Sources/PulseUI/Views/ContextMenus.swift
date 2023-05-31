@@ -67,7 +67,9 @@ enum ContextMenu {
         var body: some View {
             Section {
 #if os(iOS)
+                            if #available(iOS 14.0, *) {
                 ContextMenu.NetworkTaskShareMenu(task: task, shareItems: $sharedItems)
+                            }
 #else
                 Button(action: { sharedTask = task }) {
                     Label("Share...", systemImage: "square.and.arrow.up")
@@ -94,7 +96,7 @@ enum ContextMenu {
         @EnvironmentObject private var filters: ConsoleFiltersViewModel
 
         var body: some View {
-            if #available(iOS 14.0, *)
+            if #available(iOS 14.0, *) {
             Menu(content: {
                 if let host = task.host {
                     Button("Hide Host '\(host)'") {
@@ -136,9 +138,11 @@ enum ContextMenu {
                     $0.render(task, content: .sharing)
                 }
             }
+                                        if #available(iOS 14.0, *) {
             Button(action: { shareItems = ShareItems([task.cURLDescription()]) }) {
                 Label("Share as cURL", systemImage: "square.and.arrow.up")
             }
+                                        }
         }
     }
 
@@ -192,7 +196,6 @@ enum ContextMenu {
             }
                        } else {
                        Text("")
-                       }
                        }
     }
 }
