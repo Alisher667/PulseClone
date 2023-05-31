@@ -14,7 +14,9 @@ struct SpinnerView: View {
 
     var body: some View {
         VStack {
-            ProgressView()
+            if #available(iOS 14.0, *) {
+                ProgressView()
+            }
             if let details = viewModel.details {
                 Text(details)
                     .padding(.top, 6)
