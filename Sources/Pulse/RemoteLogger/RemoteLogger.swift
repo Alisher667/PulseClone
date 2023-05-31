@@ -41,13 +41,9 @@ public final class RemoteLogger: RemoteLoggerConnectionDelegate {
     private var buffer: [LoggerStore.Event]? = []
 
     // Persistence
-    if #available(iOS 14.0, *) {
     @AppStorage("com-github-kean-pulse-is-remote-logger-enabled")
-    }
     public private(set) var isEnabled = false
-    if #available(iOS 14.0, *) {
     @AppStorage("com-github-kean-pulse-selected-server")
-    }
     public private(set) var selectedServer = ""
 
     private let queue = DispatchQueue(label: "com.github.kean.remote-logger")
