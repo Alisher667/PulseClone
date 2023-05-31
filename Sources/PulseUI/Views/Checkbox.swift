@@ -12,9 +12,11 @@ struct Checkbox<Label: View>: View {
 #if os(iOS)
         Button(action: { isOn.toggle() }) {
             HStack {
+                if #available(iOS 14.0, *) {
                 Image(systemName: isOn ? "checkmark.circle.fill" : "circle")
                     .font(.title3)
                     .foregroundColor(isOn ? .blue : .separator)
+                }
                 label()
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
