@@ -288,5 +288,5 @@ struct StringSearchOptionsMenu_Previews: PreviewProvider {
     }
 }
 #endif
-
+}
 #endif
