@@ -47,9 +47,12 @@ struct NetworkInspectorView: View {
             Section {
                 NetworkInspectorView.makeResponseSection(task: task)
             }
-            Section {
-                NetworkMetricsCell(task: task)
-                NetworkCURLCell(task: task)
+            if #available(iOS 14.0, *) {
+                Section {
+                    NetworkMetricsCell(task: task)
+                    NetworkCURLCell(task: task)
+                }
+            } else { 
             }
         }
     }
