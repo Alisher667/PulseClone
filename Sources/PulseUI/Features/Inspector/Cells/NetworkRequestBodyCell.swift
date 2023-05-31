@@ -23,9 +23,9 @@ struct NetworkRequestBodyCell: View {
 
     private var destination: some View {
         if #available(iOS 14.0, *) {
-            NetworkInspectorRequestBodyView(viewModel: viewModel.detailsViewModel)
+            return NetworkInspectorRequestBodyView(viewModel: viewModel.detailsViewModel)
         } else {
-            AnyView()
+            return Text("")
         }
     }
 }
