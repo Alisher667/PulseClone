@@ -35,7 +35,9 @@ struct NetworkInspectorResponseBodyView: View {
         } else {
             PlaceholderView(imageName: "nosign", title: "Empty Response")
         }
-    }
+    } else {
+                    Text("")
+                    }
     }
 }
 
