@@ -36,7 +36,7 @@ struct NetworkInspectorRequestBodyView: View {
         }
     }
 }
-
+@available(iOS 14.0, *)
 final class NetworkInspectorRequestBodyViewModel {
     private(set) lazy var fileViewModel = data.map { data in
         FileViewerViewModel(
