@@ -28,14 +28,18 @@ struct DecodingErrors_Previews: PreviewProvider {
 
     @ViewBuilder
     private static func fileViewer(error: NetworkLogger.DecodingError) -> some View {
+    if #available(iOS 14.0, *) {
         let viewer = FileViewer(viewModel: .init(title: "Response", context: .init(contentType: .init(rawValue: "application/json"), originalSize: 1200, error: error), data: { MockJSON.allPossibleValues }))
 #if os(iOS)
-        NavigationView {
+        return NavigationView {
             viewer
         }
 #else
-        viewer
+        return viewer
 #endif
+    }
+    } else {
+        Text("")
     }
 }
 
