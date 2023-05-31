@@ -141,9 +141,11 @@ extension View {
             .environmentObject(environment.router)
             .environmentObject(environment.index)
             .environmentObject(environment.filters)
-            .environmentObject(UserSettings.shared)
             .environment(\.router, environment.router)
             .environment(\.store, environment.store)
             .environment(\.managedObjectContext, environment.store.viewContext)
+        if #available(iOS 14.0, *) {
+                    .environmentObject(UserSettings.shared)
+        }
     }
 }
