@@ -104,6 +104,7 @@ final class StoreDetailsViewModel: ObservableObject {
     @Published private(set) var info: LoggerStore.Info?
     @Published private(set) var errorMessage: String?
 
+    @available(iOS 14.0, *)
     func load(from source: StoreDetailsView.Source) {
         do {
             switch source {
@@ -171,8 +172,10 @@ private let dateFormatter = DateFormatter(dateStyle: .medium, timeStyle: .medium
 #if DEBUG
 struct StoreDetailsView_Previews: PreviewProvider {
     static var previews: some View {
-        StoreDetailsView(source: .store(.mock))
-            .frame(width: 280)
+    if #available(iOS 14, *) {
+            StoreDetailsView(source: .store(.mock))
+                .frame(width: 280)
+        }
     }
 }
 #endif
