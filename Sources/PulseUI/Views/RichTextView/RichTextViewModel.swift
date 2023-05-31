@@ -8,6 +8,7 @@ import SwiftUI
 import Pulse
 import Combine
 
+@available(iOS 14.0, *)
 final class RichTextViewModel: ObservableObject {
     // Search
     @Published var searchOptions: StringSearchOptions = .default
