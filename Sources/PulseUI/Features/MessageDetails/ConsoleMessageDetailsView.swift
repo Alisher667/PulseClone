@@ -7,6 +7,7 @@
 import SwiftUI
 import Pulse
 
+@available(iOS 14.0, *)
 struct ConsoleMessageDetailsView: View {
     let message: LoggerMessageEntity
 
