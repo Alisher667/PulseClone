@@ -43,6 +43,7 @@ struct FileViewer: View {
 // MARK: - Preview
 
 #if DEBUG
+@available(iOS 14.0, *)
 struct FileViewer_Previews: PreviewProvider {
     static var previews: some View {
         Group {
