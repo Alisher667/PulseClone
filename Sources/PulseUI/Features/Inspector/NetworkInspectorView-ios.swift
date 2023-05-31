@@ -17,18 +17,20 @@ struct NetworkInspectorView: View {
 
     @available(iOS 14.0, *)
     var body: some View {
-        List {
-            contents
-        }
-        .animation(.default, value: task.state)
-        .listStyle(.insetGrouped)
-        .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                trailingNavigationBarItems
+        if #available(iOS 14.0, *) {
+            List {
+                contents
             }
+            .animation(.default, value: task.state)
+            .listStyle(.insetGrouped)
+            .toolbar {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    trailingNavigationBarItems
+                }
+            }
+            .inlineNavigationTitle(task.title)
+            .sheet(item: $shareItems, content: ShareView.init)
         }
-        .inlineNavigationTitle(task.title)
-        .sheet(item: $shareItems, content: ShareView.init)
     }
 
     @ViewBuilder
