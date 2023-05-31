@@ -37,6 +37,7 @@ struct NetworkInspectorResponseBodyView: View {
     }
 }
 
+@available(iOS 14.0, *)
 final class NetworkInspectorResponseBodyViewModel {
     private(set) lazy var fileViewModel = data.map { data in
                                                     if #available(iOS 14.0, *) {
