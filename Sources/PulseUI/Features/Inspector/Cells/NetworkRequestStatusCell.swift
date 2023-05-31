@@ -33,14 +33,10 @@ struct NetworkRequestStatusCell: View {
                 Spacer()
                 viewModel.duration.map(DurationLabel.init)
             }
+            .font(.headline)
         } else {
             HStack(spacing: spacing) {
-                Text(Image(systemName: viewModel.imageName))
-                Text(viewModel.title)
-                Spacer()
-                viewModel.duration.map(DurationLabel.init)
             }
-            .font(.headline)
         }
 #if os(tvOS)
         .font(.system(size: 38, weight: .bold))
