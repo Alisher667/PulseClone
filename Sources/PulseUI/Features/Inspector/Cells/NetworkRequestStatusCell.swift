@@ -34,10 +34,6 @@ struct NetworkRequestStatusCell: View {
                 viewModel.duration.map(DurationLabel.init)
             }
             .font(.headline)
-        } else {
-            HStack(spacing: spacing) {
-            }
-        }
 #if os(tvOS)
         .font(.system(size: 38, weight: .bold))
         .padding(.top, 16)
@@ -45,6 +41,10 @@ struct NetworkRequestStatusCell: View {
         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
         .listRowBackground(Color.clear)
 #endif
+        } else {
+            HStack(spacing: spacing) {
+            }
+        }
     }
 
     #endif
