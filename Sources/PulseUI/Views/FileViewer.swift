@@ -5,6 +5,7 @@
 import SwiftUI
 import Pulse
 
+@available(iOS 14.0, *)
 struct FileViewer: View {
     @ObservedObject var viewModel: FileViewerViewModel
 
