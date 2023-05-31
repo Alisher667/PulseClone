@@ -21,7 +21,11 @@ struct NetworkRequestInfoCell: View {
     }
 
     private var destinationRequestDetails: some View {
-        NetworkDetailsView(title: "Request") { viewModel.render() }
+        if #available(iOS 14.0, *) {
+            NetworkDetailsView(title: "Request") { viewModel.render() }
+        } else {
+            Text()
+        }
     }
 }
 
