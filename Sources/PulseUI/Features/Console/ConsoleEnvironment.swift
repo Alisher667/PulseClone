@@ -137,7 +137,7 @@ extension EnvironmentValues {
 extension View {
     func injecting(_ environment: ConsoleEnvironment) -> some View {
         if #available(iOS 14.0, *) {
-            self.background(ConsoleRouterView()) // important: order
+            return self.background(ConsoleRouterView()) // important: order
                 .environmentObject(environment)
                 .environmentObject(environment.router)
                 .environmentObject(environment.index)
@@ -147,7 +147,7 @@ extension View {
                 .environment(\.managedObjectContext, environment.store.viewContext)
                 .environmentObject(UserSettings.shared)
         } else {
-            self.background(ConsoleRouterView()) // important: order
+            return self.background(ConsoleRouterView()) // important: order
                .environmentObject(environment)
                .environmentObject(environment.router)
                .environmentObject(environment.index)
