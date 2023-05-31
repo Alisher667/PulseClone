@@ -22,20 +22,18 @@ struct NetworkRequestStatusCell: View {
     }
 
 #else
-    @available(iOS 14.0, *)
     var body: some View {
-        HStack(spacing: spacing) {
-            Text(Image(systemName: viewModel.imageName))
-                .foregroundColor(viewModel.tintColor)
-            Text(viewModel.title)
-                .lineLimit(1)
-                .foregroundColor(viewModel.tintColor)
-            Spacer()
-            viewModel.duration.map(DurationLabel.init)
+        if #available(iOS 14.0, *) {
+            HStack(spacing: spacing) {
+                Text(Image(systemName: viewModel.imageName))
+                    .foregroundColor(viewModel.tintColor)
+                Text(viewModel.title)
+                    .lineLimit(1)
+                    .foregroundColor(viewModel.tintColor)
+                Spacer()
+                viewModel.duration.map(DurationLabel.init)
+            }
         }
-    }
-        
-    var body: some View {
     }
 #if os(tvOS)
         .font(.system(size: 38, weight: .bold))
