@@ -104,7 +104,7 @@ struct ConsoleGroupByMenu: View {
     @EnvironmentObject private var environment: ConsoleEnvironment
 
     var body: some View {
-        if #available(iOS 14.0, *)
+        if #available(iOS 14.0, *) {
         Menu(content: {
             if environment.mode == .network {
                 Picker("Group By", selection: $environment.listOptions.taskGroupBy) {
