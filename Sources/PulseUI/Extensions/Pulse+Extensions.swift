@@ -45,7 +45,7 @@ extension NetworkTaskEntity {
     var title: String {
         url.flatMap(URL.init(string:))?.lastPathComponent ?? "Request"
     }
-
+@available(iOS 14.0, *)
     var requestFileViewerContext: FileViewerViewModel.Context {
         FileViewerViewModel.Context(
             contentType: originalRequest?.contentType,
@@ -55,7 +55,7 @@ extension NetworkTaskEntity {
             error: nil
         )
     }
-
+@available(iOS 14.0, *)
     var responseFileViewerContext: FileViewerViewModel.Context {
         FileViewerViewModel.Context(
             contentType: response?.contentType,
