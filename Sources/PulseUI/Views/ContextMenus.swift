@@ -122,8 +122,10 @@ enum ContextMenu {
         @Binding var shareItems: ShareItems?
 
         var body: some View {
+            if #available(iOS 14.0, *) {
             Menu(content: content) {
                 Label("Share...", systemImage: "square.and.arrow.up")
+            }
             }
         }
 
@@ -144,13 +146,16 @@ enum ContextMenu {
         let task: NetworkTaskEntity
 
         var body: some View {
+                        if #available(iOS 14.0, *) {
             Menu(content: content) {
                 Label("Copy", systemImage: "doc.on.doc")
             }
+                        }
         }
 
         @ViewBuilder
         func content() -> some View {
+                       if #available(iOS 14.0, *) {
             if let url = task.url {
                 Button(action: {
                     UXPasteboard.general.string = url
@@ -185,7 +190,10 @@ enum ContextMenu {
                     Label("Copy Response", systemImage: "arrow.down.circle")
                 }
             }
-        }
+                       } else {
+                       Text("")
+                       }
+                       }
     }
 }
 
@@ -236,6 +244,7 @@ struct AttributedStringShareMenu: View {
     let string: () -> NSAttributedString
 
     var body: some View {
+                    if #available(iOS 14.0, *) {
         Button(action: { shareItems = ShareService.share(string(), as: .plainText) }) {
             Label("Share as Text", systemImage: "square.and.arrow.up")
         }
@@ -247,12 +256,14 @@ struct AttributedStringShareMenu: View {
             Label("Share as PDF", systemImage: "square.and.arrow.up")
         }
 #endif
+                    }
     }
 }
 
 #if DEBUG
 struct StringSearchOptionsMenu_Previews: PreviewProvider {
     static var previews: some View {
+                    if #available(iOS 14.0, *) {
         VStack(spacing: 32) {
             Spacer()
             Menu(content: {
@@ -270,6 +281,7 @@ struct StringSearchOptionsMenu_Previews: PreviewProvider {
                 Text("Search Options")
             }
         }
+    }
     }
 }
 #endif
