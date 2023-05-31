@@ -24,7 +24,7 @@ struct NetworkRequestInfoCell: View {
         if #available(iOS 14.0, *) {
             NetworkDetailsView(title: "Request") { viewModel.render() }
         } else {
-            Text()
+            Text("")
         }
     }
 }
