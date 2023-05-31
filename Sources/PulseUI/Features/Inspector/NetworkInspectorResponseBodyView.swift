@@ -40,13 +40,11 @@ struct NetworkInspectorResponseBodyView: View {
 @available(iOS 14.0, *)
 final class NetworkInspectorResponseBodyViewModel {
     private(set) lazy var fileViewModel = data.map { data in
-                                                    if #available(iOS 14.0, *) {
         FileViewerViewModel(
             title: "Response Body",
             context: task.responseFileViewerContext,
             data: { data }
         )
-                                                    }
     }
 
     private var data: Data? {
