@@ -122,22 +122,18 @@ struct RichTextView_Previews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 14.0, *) {
             let textView = RichTextView(viewModel: makePreviewViewModel())
-        }
 #if os(macOS)
-                if #available(iOS 14.0, *) {
         textView
             .background(Color(.textBackgroundColor))
             .frame(height: 600)
             .previewLayout(.sizeThatFits)
-                }
 #else
-                if #available(iOS 14.0, *) {
         NavigationView {
             textView
                 .inlineNavigationTitle("Rich Text View")
         }
-                }
         #endif
+    }
     }
 }
 
