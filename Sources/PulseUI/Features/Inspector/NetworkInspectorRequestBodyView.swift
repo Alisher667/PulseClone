@@ -18,7 +18,6 @@ struct NetworkInspectorRequestBodyView: View {
 
     @ViewBuilder
     private var contents: some View {
-if #available(iOS 14.0, *) {
         if let viewModel = viewModel.fileViewModel {
                 FileViewer(viewModel: viewModel)
                     .onDisappear { self.viewModel.onDisappear() }
@@ -35,7 +34,6 @@ if #available(iOS 14.0, *) {
         } else {
             PlaceholderView(imageName: "nosign", title: "Empty Request")
         }
-    }
     }
 }
 
