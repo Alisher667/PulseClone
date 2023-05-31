@@ -18,13 +18,10 @@ struct NetworkInspectorResponseBodyView: View {
 
     @ViewBuilder
     var contents: some View {
+                    if #available(iOS 14.0, *) {
         if let viewModel = viewModel.fileViewModel {
-            if #available(iOS 14.0, *) {
             FileViewer(viewModel: viewModel)
                 .onDisappear { self.viewModel.onDisappear() }
-            } else {
-                Text("")
-            }
         } else if viewModel.task.type == .downloadTask {
             PlaceholderView(imageName: "arrow.down.circle", title: {
                 var title = "Downloaded to a File"
@@ -38,6 +35,7 @@ struct NetworkInspectorResponseBodyView: View {
         } else {
             PlaceholderView(imageName: "nosign", title: "Empty Response")
         }
+    }
     }
 }
 
