@@ -100,6 +100,7 @@ struct ConsoleMessageDetailsView: View {
 }
 
 #if DEBUG
+@available(iOS 14.0, *)
 struct ConsoleMessageDetailsView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
@@ -108,6 +109,7 @@ struct ConsoleMessageDetailsView_Previews: PreviewProvider {
     }
 }
 
+@available(iOS 14.0, *)
 func makeMockMessage() -> LoggerMessageEntity {
     let entity = LoggerMessageEntity(context: LoggerStore.mock.viewContext)
     entity.text = "test"
