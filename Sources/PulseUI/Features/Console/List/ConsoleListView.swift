@@ -13,36 +13,32 @@ import Combine
 struct ConsoleListView: View {
     @EnvironmentObject var environment: ConsoleEnvironment
     @EnvironmentObject var filters: ConsoleFiltersViewModel
-
+    
     var body: some View {
-        if #available(iOS 14.0, *) {
-            _InternalConsoleListView(environment: environment, filters: filters)
-        } else {
-            Text("")
-        }
+        _InternalConsoleListView(environment: environment, filters: filters)
     }
 }
 
 @available(iOS 15, macOS 13, *)
 private struct _InternalConsoleListView: View {
     private let environment: ConsoleEnvironment
-
+    
     @StateObject private var listViewModel: IgnoringUpdates<ConsoleListViewModel>
     @StateObject private var searchBarViewModel: ConsoleSearchBarViewModel
     @StateObject private var searchViewModel: IgnoringUpdates<ConsoleSearchViewModel>
-
+    
     init(environment: ConsoleEnvironment, filters: ConsoleFiltersViewModel) {
         self.environment = environment
-
+        
         let listViewModel = ConsoleListViewModel(environment: environment, filters: filters)
         let searchBarViewModel = ConsoleSearchBarViewModel()
         let searchViewModel = ConsoleSearchViewModel(environment: environment, source: listViewModel, searchBar: searchBarViewModel)
-
+        
         _listViewModel = StateObject(wrappedValue: IgnoringUpdates(listViewModel))
         _searchBarViewModel = StateObject(wrappedValue: searchBarViewModel)
         _searchViewModel = StateObject(wrappedValue: IgnoringUpdates(searchViewModel))
     }
-
+    
     var body: some View {
         contents
             .environmentObject(listViewModel.value)
@@ -51,7 +47,7 @@ private struct _InternalConsoleListView: View {
             .onAppear { listViewModel.value.isViewVisible = true }
             .onDisappear { listViewModel.value.isViewVisible = false }
     }
-
+    
     @ViewBuilder private var contents: some View {
         if #available(iOS 16, *) {
             _ConsoleListView()
@@ -92,31 +88,33 @@ private struct _InternalConsoleListView: View {
 private struct _ConsoleListView: View {
     @Environment(\.isSearching) private var isSearching
     @Environment(\.store) private var store
-
+    
     @ObservedObject private var syncSession = LoggerSyncSession.shared
     @State private var presentedStore: LoggerStore?
-
+    
     var body: some View {
-        List {
-            if isSearching {
-                ConsoleSearchListContentView()
-            } else {
-                ConsoleToolbarView()
-                    .listRowSeparator(.hidden, edges: .top)
-                if store === LoggerStore.shared, let storeURL = syncSession.importedStoreURL {
-                    buttonShowImportedStore(storeURL: storeURL)
+        ScrollView {
+            List {
+                if isSearching {
+                    ConsoleSearchListContentView()
+                } else {
+                    ConsoleToolbarView()
+                        .listRowSeparator(.hidden, edges: .top)
+                    if store === LoggerStore.shared, let storeURL = syncSession.importedStoreURL {
+                        buttonShowImportedStore(storeURL: storeURL)
+                    }
+                    ConsoleListContentView()
                 }
-                ConsoleListContentView()
             }
-        }
-        .listStyle(.plain)
-        .sheet(item: $presentedStore) { store in
-            NavigationView {
-                ConsoleView(store: store)
+            .listStyle(.plain)
+            .sheet(item: $presentedStore) { store in
+                NavigationView {
+                    ConsoleView(store: store)
+                }
             }
         }
     }
-
+    
     private func buttonShowImportedStore(storeURL: URL) -> some View {
         HStack {
             Button(action: {
@@ -142,13 +140,13 @@ private struct _ConsoleListView: View {
     @EnvironmentObject private var environment: ConsoleEnvironment
     @EnvironmentObject private var listViewModel: ConsoleListViewModel
     @EnvironmentObject private var searchViewModel: ConsoleSearchViewModel
-
+    
     @State private var selectedObjectID: NSManagedObjectID? // Has to use for Table
     @State private var selection: ConsoleSelectedItem?
     @State private var shareItems: ShareItems?
-
+    
     @Environment(\.isSearching) private var isSearching
-
+    
     var body: some View {
         content
             .onChange(of: selectedObjectID) {
@@ -161,26 +159,28 @@ private struct _ConsoleListView: View {
                 searchViewModel.isSearchActive = $0
             }
     }
-
+    
     @ViewBuilder
     private var content: some View {
-        VStack(spacing: 0) {
-            if isSearching && !searchViewModel.parameters.isEmpty {
-                ConsoleSearchToolbar()
-            } else {
-                ConsoleToolbarView()
-            }
-            Divider()
-            ScrollViewReader { proxy in
-                List(selection: $selection) {
-                    if isSearching && !searchViewModel.parameters.isEmpty {
-                        ConsoleSearchResultsListContentView()
-                    } else {
-                        ConsoleListContentView(proxy: proxy)
+        ScrollView {
+            VStack(spacing: 0) {
+                if isSearching && !searchViewModel.parameters.isEmpty {
+                    ConsoleSearchToolbar()
+                } else {
+                    ConsoleToolbarView()
+                }
+                Divider()
+                ScrollViewReader { proxy in
+                    List(selection: $selection) {
+                        if isSearching && !searchViewModel.parameters.isEmpty {
+                            ConsoleSearchResultsListContentView()
+                        } else {
+                            ConsoleListContentView(proxy: proxy)
+                        }
                     }
                 }
+                .environment(\.defaultMinListRowHeight, 1)
             }
-            .environment(\.defaultMinListRowHeight, 1)
         }
     }
 }

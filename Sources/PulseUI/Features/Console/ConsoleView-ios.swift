@@ -73,14 +73,12 @@ public struct ConsoleView: View {
 struct ConsoleView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            if #available(iOS 14.0, *) {
-                NavigationView {
-                    ConsoleView(environment: .init(store: .mock))
-                }.previewDisplayName("Console")
-                NavigationView {
-                    ConsoleView(store: .mock, mode: .network)
-                }.previewDisplayName("Network")
-            }
+            NavigationView {
+                ConsoleView(environment: .init(store: .mock))
+            }.previewDisplayName("Console")
+            NavigationView {
+                ConsoleView(store: .mock, mode: .network)
+            }.previewDisplayName("Network")
         }
     }
 }
