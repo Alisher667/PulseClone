@@ -19,8 +19,12 @@ struct NetworkInspectorRequestBodyView: View {
     @ViewBuilder
     private var contents: some View {
         if let viewModel = viewModel.fileViewModel {
-            FileViewer(viewModel: viewModel)
-                .onDisappear { self.viewModel.onDisappear() }
+            if #available(iOS 14.0, *) {
+                FileViewer(viewModel: viewModel)
+                    .onDisappear { self.viewModel.onDisappear() }
+            } else {
+                Text("")
+            }
         } else if viewModel.task.type == .uploadTask {
             PlaceholderView(imageName: "arrow.up.circle", title: {
                 var title = "Uploaded from a File"
