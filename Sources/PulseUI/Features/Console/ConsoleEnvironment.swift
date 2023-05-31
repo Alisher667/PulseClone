@@ -136,16 +136,25 @@ extension EnvironmentValues {
 
 extension View {
     func injecting(_ environment: ConsoleEnvironment) -> some View {
-        self.background(ConsoleRouterView()) // important: order
-            .environmentObject(environment)
-            .environmentObject(environment.router)
-            .environmentObject(environment.index)
-            .environmentObject(environment.filters)
-            .environment(\.router, environment.router)
-            .environment(\.store, environment.store)
-            .environment(\.managedObjectContext, environment.store.viewContext)
         if #available(iOS 14.0, *) {
-                    .environmentObject(UserSettings.shared)
+            self.background(ConsoleRouterView()) // important: order
+                .environmentObject(environment)
+                .environmentObject(environment.router)
+                .environmentObject(environment.index)
+                .environmentObject(environment.filters)
+                .environment(\.router, environment.router)
+                .environment(\.store, environment.store)
+                .environment(\.managedObjectContext, environment.store.viewContext)
+                .environmentObject(UserSettings.shared)
+        } else {
+            self.background(ConsoleRouterView()) // important: order
+               .environmentObject(environment)
+               .environmentObject(environment.router)
+               .environmentObject(environment.index)
+               .environmentObject(environment.filters)
+               .environment(\.router, environment.router)
+               .environment(\.store, environment.store)
+               .environment(\.managedObjectContext, environment.store.viewContext)   
         }
     }
 }
