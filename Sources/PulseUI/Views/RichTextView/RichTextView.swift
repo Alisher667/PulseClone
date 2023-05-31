@@ -9,6 +9,7 @@ import CoreData
 import Pulse
 import Combine
 
+@available(iOS 14.0, *)
 struct RichTextView: View {
     @ObservedObject var viewModel: RichTextViewModel
     var isTextViewBarItemsHidden = false
