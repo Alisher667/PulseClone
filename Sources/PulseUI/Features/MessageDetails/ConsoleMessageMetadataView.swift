@@ -10,10 +10,14 @@ struct ConsoleMessageMetadataView: View {
     let message: LoggerMessageEntity
 
     var body: some View {
-        RichTextView(viewModel: .init(string: string))
+        if #available(iOS 14.0, *) {
+            RichTextView(viewModel: .init(string: string))
 #if !os(macOS)
-            .navigationTitle("Message Details")
+                .navigationTitle("Message Details")
 #endif
+        } else {
+            Text("")
+        }
     }
 
     private var string: NSAttributedString {

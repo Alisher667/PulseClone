@@ -13,3 +13,11 @@ extension ConsoleView {
         self.init(environment: .init(store: store, mode: mode))
     }
 }
+
+@available(iOS 14.0, *)
+extension ConsoleView {
+    @available(*, deprecated, message: "Please use the default initializer and pass the mode instead")
+    public static func network(store: LoggerStore = .shared) -> ConsoleView {
+        ConsoleView(environment: .init(store: store, mode: .network))
+    }
+}

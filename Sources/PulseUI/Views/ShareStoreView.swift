@@ -9,7 +9,7 @@ import CoreData
 import Pulse
 import Combine
 
-@available(iOS 15, macOS 13, *)
+@available(iOS 14.0, *)
 struct ShareStoreView: View {
     /// Preselected sessions.
     var sessions: Set<UUID> = []
@@ -63,7 +63,9 @@ struct ShareStoreView: View {
     @ViewBuilder
     private var sectionSharingOptions: some View {
         Section {
-            ConsoleSessionsPickerView(selection: $viewModel.sessions)
+            if #available(iOS 15.0, *) {
+                ConsoleSessionsPickerView(selection: $viewModel.sessions)
+            }
 #if os(iOS)
             NavigationLink(destination: destinationLogLevels) {
                 InfoRow(title: "Log Levels", details: viewModel.selectedLevelsTitle)

@@ -16,10 +16,10 @@ struct SpinnerView: View {
         VStack {
             if #available(iOS 14.0, *) {
                 ProgressView()
-            }
-            if let details = viewModel.details {
-                Text(details)
-                    .padding(.top, 6)
+                if let details = viewModel.details {
+                    Text(details)
+                        .padding(.top, 6)
+                }
             }
         }
         .foregroundColor(.secondary)

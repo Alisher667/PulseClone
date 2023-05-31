@@ -13,13 +13,17 @@ struct ConsoleMessageDetailsView: View {
 
 #if os(iOS)
     var body: some View {
-        contents
-            .navigationBarTitle("", displayMode: .inline)
-            .toolbar {
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    trailingNavigationBarItems
+        if #available(iOS 14.0, *) {
+            return contents
+                .navigationBarTitle("", displayMode: .inline)
+                .toolbar {
+                    ToolbarItemGroup(placement: .navigationBarTrailing) {
+                        trailingNavigationBarItems
+                    }
                 }
-            }
+        } else {
+            return Text("")
+        }
     }
 
     @ViewBuilder
@@ -87,11 +91,16 @@ struct ConsoleMessageDetailsView: View {
 #endif
 
     private var contents: some View {
-        VStack {
-            RichTextView(viewModel: makeTextViewModel())
-        }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        if #available(iOS 14.0, *) {
+            return VStack {
+                RichTextView(viewModel: makeTextViewModel())
+            }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        } else {
+            return Text("")
+        }
     }
 
+    @available(iOS 14.0, *)
     private func makeTextViewModel() -> RichTextViewModel {
         let viewModel = RichTextViewModel(string: TextRenderer().preformatted(message.text))
         viewModel.isFilterEnabled = true

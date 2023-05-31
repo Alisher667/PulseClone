@@ -13,7 +13,7 @@ import Combine
 @available(iOS 15, *)
 struct ConsoleToolbarView: View {
     @EnvironmentObject private var environment: ConsoleEnvironment
-
+    
     var body: some View {
         if #available(iOS 16.0, *) {
             ViewThatFits {
@@ -25,14 +25,14 @@ struct ConsoleToolbarView: View {
             horizontal
         }
     }
-
+    
     private var horizontal: some View {
         HStack(alignment: .bottom, spacing: 0) {
             contents(isVertical: false)
         }
         .buttonStyle(.plain)
     }
-
+    
     // Fallback for larger dynamic font sizes.
     private var vertical: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -40,7 +40,7 @@ struct ConsoleToolbarView: View {
         }
         .buttonStyle(.plain)
     }
-
+    
     @ViewBuilder
     private func contents(isVertical: Bool) -> some View {
         switch environment.initialMode {
@@ -61,7 +61,7 @@ struct ConsoleToolbarView: View {
 struct ConsoleToolbarView: View {
     @EnvironmentObject private var environment: ConsoleEnvironment
     @EnvironmentObject private var filters: ConsoleFiltersViewModel
-
+    
     var body: some View {
         HStack {
             if filters.options.focus != nil {
@@ -78,13 +78,13 @@ struct ConsoleToolbarView: View {
         .padding(.horizontal, 10)
         .frame(height: 27, alignment: .center)
     }
-
+    
     @ViewBuilder
     private func makeFocusedView() -> some View {
         Text("Focused Logs")
             .foregroundColor(.secondary)
             .font(.subheadline.weight(.medium))
-
+        
         Button(action: { filters.options.focus = nil }) {
             Image(systemName: "xmark")
         }
@@ -97,22 +97,22 @@ struct ConsoleToolbarView: View {
 
 struct ConsoleModePicker: View {
     @ObservedObject private var environment: ConsoleEnvironment
-
+    
     @ObservedObject private var logsCounter: ManagedObjectsCountObserver
     @ObservedObject private var tasksCounter: ManagedObjectsCountObserver
-
+    
     init(environment: ConsoleEnvironment) {
         self.environment = environment
         self.logsCounter = environment.logCountObserver
         self.tasksCounter = environment.taskCountObserver
     }
-
+    
 #if os(macOS)
     let spacing: CGFloat = 4
 #else
     let spacing: CGFloat = 12
 #endif
-
+    
     var body: some View {
         HStack(spacing: spacing) {
             ConsoleModeButton(title: "All", isSelected: environment.mode == .all) {
@@ -131,13 +131,13 @@ struct ConsoleModePicker: View {
 private struct ConsoleToolbarTitle: View {
     @EnvironmentObject private var environment: ConsoleEnvironment
     @EnvironmentObject private var listViewModel: ConsoleListViewModel
-
+    
     var body: some View {
         Text(title)
             .foregroundColor(.secondary)
             .font(.subheadline.weight(.medium))
     }
-
+    
     private var title: String {
         let kind = environment.initialMode == .network ? "Requests" : "Logs"
         return "\(listViewModel.entities.count) \(kind)"
@@ -149,7 +149,7 @@ private struct ConsoleModeButton: View {
     var details: String?
     let isSelected: Bool
     let action: () -> Void
-
+    
 #if os(macOS)
     var body: some View {
         InlineTabBarItem(title: title, details: details, isSelected: isSelected, action: action)
@@ -180,29 +180,37 @@ private struct ConsoleModeButton: View {
 @available(iOS 15, *)
 struct ConsoleListOptionsView: View {
     @EnvironmentObject private var filters: ConsoleFiltersViewModel
-
+    
     var body: some View {
-#if PULSE_STANDALONE_APP
-        SelectableButton(image: Image(systemName: "exclamationmark.octagon"), isSelected: $filters.options.isOnlyErrors)
+        if #available(iOS 15, *) {
+            contents.dynamicTypeSize(...DynamicTypeSize.accessibility1)
+        } else {
+            contents
+        }
+    }
+    
+    @ViewBuilder
+    private var contents: some View {
+        if #available(iOS 14.0, *) {
+#if os(macOS)
+            Button(action: { filters.options.isOnlyErrors.toggle() }) {
+                Image(systemName: filters.options.isOnlyErrors ? "exclamationmark.octagon.fill" : "exclamationmark.octagon")
+                    .foregroundColor(filters.options.isOnlyErrors ? .red : .primary)
+            }
+            .buttonStyle(.plain)
             .keyboardShortcut("e", modifiers: [.command, .shift])
             .help("Toggle Show Only Errors (⇧⌘E)")
-#elseif os(macOS)
-        Button(action: { filters.options.isOnlyErrors.toggle() }) {
-            Image(systemName: filters.options.isOnlyErrors ? "exclamationmark.octagon.fill" : "exclamationmark.octagon")
-                .foregroundColor(filters.options.isOnlyErrors ? .red : .primary)
-        }
-        .buttonStyle(.plain)
-        .keyboardShortcut("e", modifiers: [.command, .shift])
-        .help("Toggle Show Only Errors (⇧⌘E)")
 #else
-        Button(action: { filters.options.isOnlyErrors.toggle() }) {
-            Text(Image(systemName: filters.options.isOnlyErrors ? "exclamationmark.octagon.fill" : "exclamationmark.octagon"))
-                .font(.body)
-                .foregroundColor(filters.options.isOnlyErrors ? .red : .blue)
-        }
-        .padding(.leading, 1)
-        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+            Button(action: { filters.options.isOnlyErrors.toggle() }) {
+                Text(Image(systemName: filters.options.isOnlyErrors ? "exclamationmark.octagon.fill" : "exclamationmark.octagon"))
+                    .font(.body)
+                    .foregroundColor(filters.options.isOnlyErrors ? .red : .blue)
+            }
+            .padding(.leading, 1)
 #endif
+        } else {
+            Text("")
+        }
     }
 }
 

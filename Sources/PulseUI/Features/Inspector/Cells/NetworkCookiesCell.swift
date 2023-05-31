@@ -23,8 +23,12 @@ struct NetworkCookiesCell: View {
     }
 
     private var destination: some View {
-        NetworkDetailsView(title: viewModel.title) {
-            viewModel.detailsAttributedString
+        if #available(iOS 14.0, *) {
+            return NetworkDetailsView(title: viewModel.title) {
+                viewModel.detailsAttributedString
+            }
+        } else {
+            return Text("")
         }
     }
 }

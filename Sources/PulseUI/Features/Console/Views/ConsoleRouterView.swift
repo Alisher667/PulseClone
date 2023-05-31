@@ -41,13 +41,17 @@ struct ConsoleRouterView: View {
 @available(iOS 15, *)
 extension ConsoleRouterView {
     var contents: some View {
-        Text("").invisible()
-            .sheet(isPresented: $router.isShowingFilters) { destinationFilters }
-            .sheet(isPresented: $router.isShowingSettings) { destinationSettings }
-            .sheet(isPresented: $router.isShowingSessions) { destinationSessions }
-            .sheet(isPresented: $router.isShowingStoreInfo) { destinationStoreInfo }
-            .sheet(isPresented: $router.isShowingShareStore) { destinationShareStore }
-            .sheet(item: $router.shareItems, content: ShareView.init)
+        if #available(iOS 14.0, *) {
+            return Text("").invisible()
+                .sheet(isPresented: $router.isShowingFilters) { destinationFilters }
+                .sheet(isPresented: $router.isShowingSettings) { destinationSettings }
+                .sheet(isPresented: $router.isShowingSessions) { destinationSessions }
+                .sheet(isPresented: $router.isShowingStoreInfo) { destinationStoreInfo }
+                .sheet(isPresented: $router.isShowingShareStore) { destinationShareStore }
+                .sheet(item: $router.shareItems, content: ShareView.init)
+        } else {
+            return Text("")
+        }
     }
     
     private var destinationFilters: some View {
@@ -64,43 +68,53 @@ extension ConsoleRouterView {
     @ViewBuilder
     private var destinationSessions: some View {
         NavigationView {
-            SessionsView()
-                .navigationTitle("Sessions")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItemGroup(placement: .navigationBarLeading) {
-                        Button(action: { router.isShowingSessions = false }) {
-                            Text("Close")
+            if #available(iOS 14.0, *) {
+                SessionsView()
+                    .navigationTitle("Sessions")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItemGroup(placement: .navigationBarLeading) {
+                            Button(action: { router.isShowingSessions = false }) {
+                                Text("Close")
+                            }
                         }
                     }
-                }
+            }
         }
     }
 
     private var destinationSettings: some View {
         NavigationView {
-            SettingsView(store: environment.store)
-                .navigationTitle("Settings")
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationBarItems(trailing: Button(action: { router.isShowingSettings = false }) {
-                    Text("Done")
-                })
+            if #available(iOS 14.0, *) {
+                SettingsView(store: environment.store)
+                    .navigationTitle("Settings")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationBarItems(trailing: Button(action: { router.isShowingSettings = false }) {
+                        Text("Done")
+                    })
+            }
         }
     }
 
     private var destinationStoreInfo: some View {
         NavigationView {
-            StoreDetailsView(source: .store(environment.store))
-                .navigationBarItems(trailing: Button(action: { router.isShowingStoreInfo = false }) {
-                    Text("Done")
-                })
+            if #available(iOS 14.0, *) {
+                StoreDetailsView(source: .store(environment.store))
+                    .navigationBarItems(trailing: Button(action: { router.isShowingStoreInfo = false }) {
+                        Text("Done")
+                    })
+            }
         }
     }
 
     private var destinationShareStore: some View {
-        NavigationView {
-            ShareStoreView(onDismiss: { router.isShowingShareStore = false })
-        }.backport.presentationDetents([.medium, .large])
+        if #available(iOS 14.0, *) {
+            return NavigationView {
+                ShareStoreView(onDismiss: { router.isShowingShareStore = false })
+            }.backport.presentationDetents([.medium, .large])
+        } else {
+            return Text("")
+        }
     }
 }
 

@@ -5,7 +5,6 @@
 import Foundation
 import Network
 import Combine
-
 @available(iOS 14.0, *)
 extension RemoteLogger {
     /// - warning: This method is not designed to be used outside of the package.

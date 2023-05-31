@@ -15,7 +15,11 @@ struct ConsoleListView: View {
     @EnvironmentObject var filters: ConsoleFiltersViewModel
 
     var body: some View {
-        _InternalConsoleListView(environment: environment, filters: filters)
+        if #available(iOS 14.0, *) {
+            _InternalConsoleListView(environment: environment, filters: filters)
+        } else {
+            Text("")
+        }
     }
 }
 

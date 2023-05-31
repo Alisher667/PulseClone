@@ -23,7 +23,11 @@ struct NetworkHeadersCell: View {
     }
     
     private var destination: some View {
-        NetworkDetailsView(title: viewModel.title) { viewModel.detailsViewModel }
+        if #available(iOS 14.0, *) {
+            return NetworkDetailsView(title: viewModel.title) { viewModel.detailsViewModel }
+        } else {
+            return Text("")
+        }
     }
 }
 

@@ -22,12 +22,17 @@ public final class MainViewController: UIViewController {
             removeAppearanceOverrides()
         }
         if #available(iOS 14.0, *) {
-        let console = ConsoleView(environment: environment)
-        let vc = UIHostingController(rootView: NavigationView { console })
-        addChild(vc)
-        view.addSubview(vc.view)
-        vc.view.pinToSuperview()
+            let console = ConsoleView(environment: environment)
+            let vc = UIHostingController(rootView: NavigationView { console })
+            addChild(vc)
+            view.addSubview(vc.view)
+            vc.view.pinToSuperview()
         }
+    }
+
+    @available(*, deprecated, message: "onDismiss parameter is deprecated")
+    public convenience init(store: LoggerStore = .shared, onDismiss: @escaping () -> Void) {
+        self.init(store: store)
     }
 
     required init?(coder: NSCoder) {

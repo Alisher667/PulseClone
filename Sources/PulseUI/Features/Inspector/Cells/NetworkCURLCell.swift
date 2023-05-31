@@ -21,15 +21,15 @@ struct NetworkCURLCell: View {
     }
 
     private var destination: some View {
-        let curl = task.cURLDescription()
-        let string = TextRenderer().render(curl, role: .body2, style: .monospaced)
-        let viewModel = RichTextViewModel(string: string)
-        viewModel.isLinkDetectionEnabled = false
         if #available(iOS 14.0, *) {
+            let curl = task.cURLDescription()
+            let string = TextRenderer().render(curl, role: .body2, style: .monospaced)
+            let viewModel = RichTextViewModel(string: string)
+            viewModel.isLinkDetectionEnabled = false
             return RichTextView(viewModel: viewModel)
-               .navigationTitle("cURL Representation")
+                .navigationTitle("cURL Representation")
         } else {
-            return RichTextView(viewModel: viewModel)
+            return Text("")
         }
     }
 }

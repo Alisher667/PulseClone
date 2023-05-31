@@ -142,19 +142,12 @@ extension View {
                 .environmentObject(environment.router)
                 .environmentObject(environment.index)
                 .environmentObject(environment.filters)
+                .environmentObject(UserSettings.shared)
                 .environment(\.router, environment.router)
                 .environment(\.store, environment.store)
                 .environment(\.managedObjectContext, environment.store.viewContext)
-                .environmentObject(UserSettings.shared)
         } else {
-            return self.background(ConsoleRouterView()) // important: order
-               .environmentObject(environment)
-               .environmentObject(environment.router)
-               .environmentObject(environment.index)
-               .environmentObject(environment.filters)
-               .environment(\.router, environment.router)
-               .environment(\.store, environment.store)
-               .environment(\.managedObjectContext, environment.store.viewContext)   
+            return Text("")
         }
     }
 }

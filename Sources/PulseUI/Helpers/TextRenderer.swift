@@ -160,7 +160,6 @@ final class TextRenderer {
     
     private func renderLargeHeader(for task: NetworkTaskEntity) {
         let status = NetworkRequestStatusCellModel(task: task)
-        
         if #available(iOS 14.0, *) {
             string.append(render(status.title + "\n", role: .title, weight: .semibold, color: UXColor(status.tintColor)))
         }
@@ -423,12 +422,11 @@ extension NSAttributedString.Key {
 #if DEBUG
 struct ConsoleTextRenderer_Previews: PreviewProvider {
     static var previews: some View {
-        if #available(iOS 14.0, *) {
-            Group {
-                let string = TextRenderer(options: .sharing).make { $0.render(task, content: .sharing) }
-                let stringWithColor = TextRenderer(options: .init(color: .full)).make { $0.render(task, content: .all) }
-                let html = try! TextUtilities.html(from: TextRenderer(options: .sharing).make { $0.render(task, content: .sharing) })
-                
+        Group {
+            let string = TextRenderer(options: .sharing).make { $0.render(task, content: .sharing) }
+            let stringWithColor = TextRenderer(options: .init(color: .full)).make { $0.render(task, content: .all) }
+            let html = try! TextUtilities.html(from: TextRenderer(options: .sharing).make { $0.render(task, content: .sharing) })
+            if #available(iOS 14.0, *) {
                 RichTextView(viewModel: .init(string: string))
                     .previewDisplayName("Task")
                 
@@ -447,20 +445,18 @@ struct ConsoleTextRenderer_Previews: PreviewProvider {
                 RichTextView(viewModel: .init(string: TextRendererHTML(html: String(data: html, encoding: .utf8)!).render()))
                     .previewLayout(.fixed(width: 1160, height: 2000)) // Disable interaction to view it
                     .previewDisplayName("HTML (Raw)")
-#if os(iOS) || os(macOS)
-                WebView(data: html, contentType: "application/html")
-                    .edgesIgnoringSafeArea([.bottom])
-                    .previewDisplayName("HTML")
-#endif
-                
-#if os(iOS)
-                PDFKitRepresentedView(document: PDFDocument(data: try! TextUtilities.pdf(from: string))!)
-                    .edgesIgnoringSafeArea([.all])
-                    .previewDisplayName("PDF")
-#endif
             }
-        } else {
-            Text("")
+#if os(iOS) || os(macOS)
+            WebView(data: html, contentType: "application/html")
+                .edgesIgnoringSafeArea([.bottom])
+                .previewDisplayName("HTML")
+#endif
+            
+#if os(iOS)
+            PDFKitRepresentedView(document: PDFDocument(data: try! TextUtilities.pdf(from: string))!)
+                .edgesIgnoringSafeArea([.all])
+                .previewDisplayName("PDF")
+#endif
         }
     }
 }

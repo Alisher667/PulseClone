@@ -26,7 +26,7 @@ extension View {
         if #available(iOS 14.0, *) {
             return self.hidden().accessibilityHidden(true)
         } else {
-            return self.hidden()
+            return Text("")
         }
     }
 }
@@ -120,11 +120,11 @@ extension Backport {
 extension View {
     func inlineNavigationTitle(_ title: String) -> some View {
         if #available(iOS 14.0, *) {
-        return self.navigationTitle(title)
+            return self.navigationTitle(title)
 #if os(iOS)
-            .navigationBarTitleDisplayMode(.inline)
+                .navigationBarTitleDisplayMode(.inline)
 #endif
-        } else { 
+        } else {
             return Text("")
         }
     }

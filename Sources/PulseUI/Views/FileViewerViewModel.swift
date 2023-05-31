@@ -34,6 +34,7 @@ final class FileViewerViewModel: ObservableObject {
         self.getData = data
     }
 
+    @available(iOS 14.0, *)
     enum Contents {
         case image(ImagePreviewViewModel)
         case other(RichTextViewModel)
@@ -42,6 +43,7 @@ final class FileViewerViewModel: ObservableObject {
 #endif
     }
 
+    @available(iOS 14.0, *)
     private func render(data: Data) -> Contents {
         if contentType?.isImage ?? false, let image = UXImage(data: data) {
             return .image(ImagePreviewViewModel(image: image, data: data, context: context))

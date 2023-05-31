@@ -64,6 +64,7 @@ struct ConsoleContextMenu: View {
         guard let url = URL(string: "https://github.com/kean/Pulse/issues") else { return }
         UIApplication.shared.open(url)
     }
+        
 }
 
 private struct ConsoleSortByMenu: View {
@@ -71,28 +72,29 @@ private struct ConsoleSortByMenu: View {
 
     var body: some View {
         if #available(iOS 14.0, *) {
-        Menu(content: {
-            if environment.mode == .network {
-                Picker("Sort By", selection: $environment.listOptions.taskSortBy) {
-                    ForEach(ConsoleListOptions.TaskSortBy.allCases, id: \.self) {
-                        Text($0.rawValue).tag($0)
+            Menu(content: {
+                if environment.mode == .network {
+                    Picker("Sort By", selection: $environment.listOptions.taskSortBy) {
+                        ForEach(ConsoleListOptions.TaskSortBy.allCases, id: \.self) {
+                            Text($0.rawValue).tag($0)
+                        }
+                    }
+                } else {
+                    Picker("Sort By", selection: $environment.listOptions.messageSortBy) {
+                        ForEach(ConsoleListOptions.MessageSortBy.allCases, id: \.self) {
+                            Text($0.rawValue).tag($0)
+                        }
                     }
                 }
-            } else {
-                Picker("Sort By", selection: $environment.listOptions.messageSortBy) {
-                    ForEach(ConsoleListOptions.MessageSortBy.allCases, id: \.self) {
-                        Text($0.rawValue).tag($0)
-                    }
+                Picker("Ordering", selection: $environment.listOptions.order) {
+                    Text("Descending").tag(ConsoleListOptions.Ordering.descending)
+                    Text("Ascending").tag(ConsoleListOptions.Ordering.ascending)
                 }
-            }
-            Picker("Ordering", selection: $environment.listOptions.order) {
-                Text("Descending").tag(ConsoleListOptions.Ordering.descending)
-                Text("Ascending").tag(ConsoleListOptions.Ordering.ascending)
-            }
-        }, label: {
-            Label("Sort By", systemImage: "arrow.up.arrow.down")
-        })
+            }, label: {
+                Label("Sort By", systemImage: "arrow.up.arrow.down")
+            })
         }
+        Text("")
     }
 }
 #endif
@@ -105,43 +107,45 @@ struct ConsoleGroupByMenu: View {
 
     var body: some View {
         if #available(iOS 14.0, *) {
-        Menu(content: {
-            if environment.mode == .network {
-                Picker("Group By", selection: $environment.listOptions.taskGroupBy) {
-                    Group {
-                        Text("URL").tag(ConsoleListOptions.TaskGroupBy.url)
-                        Text("Host").tag(ConsoleListOptions.TaskGroupBy.host)
-                        Text("Method").tag(ConsoleListOptions.TaskGroupBy.method)
+            Menu(content: {
+                if environment.mode == .network {
+                    Picker("Group By", selection: $environment.listOptions.taskGroupBy) {
+                        Group {
+                            Text("URL").tag(ConsoleListOptions.TaskGroupBy.url)
+                            Text("Host").tag(ConsoleListOptions.TaskGroupBy.host)
+                            Text("Method").tag(ConsoleListOptions.TaskGroupBy.method)
+                        }
+                        Group {
+                            Divider()
+                            Text("Content Type").tag(ConsoleListOptions.TaskGroupBy.responseContentType)
+                            Text("Status Code").tag(ConsoleListOptions.TaskGroupBy.statusCode)
+                            Text("Error Code").tag(ConsoleListOptions.TaskGroupBy.errorCode)
+                            Divider()
+                            Text("Task State").tag(ConsoleListOptions.TaskGroupBy.requestState)
+                            Text("Task Type").tag(ConsoleListOptions.TaskGroupBy.taskType)
+                            Divider()
+                            Text("Session").tag(ConsoleListOptions.TaskGroupBy.session)
+                        }
+                        Group {
+                            Divider()
+                            Text("None").tag(ConsoleListOptions.TaskGroupBy.noGrouping)
+                        }
                     }
-                    Group {
+                } else {
+                    Picker("Group By", selection: $environment.listOptions.messageGroupBy) {
+                        ForEach(ConsoleListOptions.MessageGroupBy.allCases.filter { $0 != .noGrouping }, id: \.self) {
+                            Text($0.rawValue).tag($0)
+                        }
                         Divider()
-                        Text("Content Type").tag(ConsoleListOptions.TaskGroupBy.responseContentType)
-                        Text("Status Code").tag(ConsoleListOptions.TaskGroupBy.statusCode)
-                        Text("Error Code").tag(ConsoleListOptions.TaskGroupBy.errorCode)
-                        Divider()
-                        Text("Task State").tag(ConsoleListOptions.TaskGroupBy.requestState)
-                        Text("Task Type").tag(ConsoleListOptions.TaskGroupBy.taskType)
-                        Divider()
-                        Text("Session").tag(ConsoleListOptions.TaskGroupBy.session)
-                    }
-                    Group {
-                        Divider()
-                        Text("None").tag(ConsoleListOptions.TaskGroupBy.noGrouping)
+                        Text("None").tag(ConsoleListOptions.MessageGroupBy.noGrouping)
                     }
                 }
-            } else {
-                Picker("Group By", selection: $environment.listOptions.messageGroupBy) {
-                    ForEach(ConsoleListOptions.MessageGroupBy.allCases.filter { $0 != .noGrouping }, id: \.self) {
-                        Text($0.rawValue).tag($0)
-                    }
-                    Divider()
-                    Text("None").tag(ConsoleListOptions.MessageGroupBy.noGrouping)
-                }
-            }
-        }, label: {
-            Label("Group By", systemImage: "rectangle.3.group")
-        })
-    }
+            }, label: {
+                Label("Group By", systemImage: "rectangle.3.group")
+            })
+        } else {
+            Text("")
+        }
     }
 }
 #endif
