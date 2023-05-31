@@ -45,8 +45,10 @@ struct RemoteLoggerSettingsView: View {
 #else
         HStack(spacing: 8) {
 #if !os(macOS)
-            ProgressView()
-                .progressViewStyle(.circular)
+            if #available(iOS 14.0, *) {
+                ProgressView()
+                    .progressViewStyle(.circular)
+            }
 #endif
             Text("Searching...")
                 .foregroundColor(.secondary)
@@ -57,33 +59,35 @@ struct RemoteLoggerSettingsView: View {
     @ViewBuilder
     private func makeServerView(for server: RemoteLoggerServerViewModel) -> some View {
         Button(action: server.connect) {
-            HStack {
-                if server.isSelected {
-                    if viewModel.isConnected {
-                        Image(systemName: "checkmark")
-                            .foregroundColor(.blue)
-                            .font(.system(size: 16, weight: .medium))
-                            .frame(width: 21, height: 36, alignment: .center)
+            if #available(iOS 14.0, *) {
+                HStack {
+                    if server.isSelected {
+                        if viewModel.isConnected {
+                            Image(systemName: "checkmark")
+                                .foregroundColor(.blue)
+                                .font(.system(size: 16, weight: .medium))
+                                .frame(width: 21, height: 36, alignment: .center)
+                        } else {
+#if os(macOS)
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                                .frame(width: 15, height: 44, alignment: .leading)
+                                .scaleEffect(0.5)
+#else
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                                .frame(width: 21, height: 36, alignment: .leading)
+#endif
+                        }
                     } else {
-                        #if os(macOS)
-                        ProgressView()
-                            .progressViewStyle(.circular)
-                            .frame(width: 15, height: 44, alignment: .leading)
-                            .scaleEffect(0.5)
-                        #else
-                        ProgressView()
-                            .progressViewStyle(.circular)
-                            .frame(width: 21, height: 36, alignment: .leading)
-                        #endif
+                        Rectangle()
+                            .hidden()
+                            .frame(width: 21, height: 36, alignment: .center)
                     }
-                } else {
-                    Rectangle()
-                        .hidden()
-                        .frame(width: 21, height: 36, alignment: .center)
+                    Text(server.name)
+                        .lineLimit(1)
+                    Spacer()
                 }
-                Text(server.name)
-                    .lineLimit(1)
-                Spacer()
             }
         }.foregroundColor(Color.primary)
             .frame(maxWidth: .infinity)

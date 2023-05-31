@@ -46,8 +46,6 @@ struct SettingsView_Previews: PreviewProvider {
         NavigationView {
             if #available(iOS 14.0, *) {
                 SettingsView(viewModel: .init(store: .mock))
-            } else {
-                Text("")
             }
         }
     }

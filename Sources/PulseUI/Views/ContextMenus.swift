@@ -62,8 +62,6 @@ enum ContextMenu {
         @Binding private(set) var sharedTask: NetworkTaskEntity?
 #endif
         
-        @EnvironmentObject private var environment: ConsoleEnvironment
-        
         var body: some View {
             Section {
 #if os(iOS)
@@ -90,44 +88,17 @@ enum ContextMenu {
         }
     }
     
-    struct NetworkTaskFilterMenu: View {
-        let task: NetworkTaskEntity
-        
-        @EnvironmentObject private var filters: ConsoleFiltersViewModel
-        
-        var body: some View {
-            if #available(iOS 14.0, *) {
-                Menu(content: {
-                    if let host = task.host {
-                        Button("Hide Host '\(host)'") {
-                            filters.criteria.network.host.hidden.insert(host)
-                        }
-                    }
-                }, label: {
-                    Label("Hide", systemImage: "eye.slash")
-                })
-                Menu(content: {
-                    if let host = task.host {
-                        Button("Show Host '\(host)'") {
-                            filters.criteria.network.host.focused = host
-                        }
-                    }
-                }, label: {
-                    Label("Show", systemImage: "eye")
-                })
-            }
-        }
-    }
-    
     struct NetworkTaskShareMenu: View {
         let task: NetworkTaskEntity
         @Binding var shareItems: ShareItems?
         
         var body: some View {
             if #available(iOS 14.0, *) {
-                Menu(content: content) {
+                return Menu(content: content) {
                     Label("Share...", systemImage: "square.and.arrow.up")
                 }
+            } else {
+                return Text("")
             }
         }
         
@@ -152,13 +123,15 @@ enum ContextMenu {
         var body: some View {
             if #available(iOS 14.0, *) {
                 Menu(content: content) {
-                    Label("Copy", systemImage: "doc.on.doc")
+                    Label("Copy...", systemImage: "doc.on.doc")
                 }
+            } else {
+                Text("")
             }
         }
         
         @ViewBuilder
-        func content() -> some View {
+        private func content() -> some View {
             if #available(iOS 14.0, *) {
                 if let url = task.url {
                     Button(action: {
@@ -260,6 +233,8 @@ struct AttributedStringShareMenu: View {
                 Label("Share as PDF", systemImage: "square.and.arrow.up")
             }
 #endif
+        } else {
+            Text("")
         }
     }
 }

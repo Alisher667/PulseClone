@@ -39,7 +39,7 @@ struct NetworkDetailsView: View {
     }
 }
 
-    @available(iOS 14.0, *)
+@available(iOS 14.0, *)
 final class NetworkDetailsViewModel {
     private(set) lazy var text = makeString().map { RichTextViewModel(string: $0) }
     

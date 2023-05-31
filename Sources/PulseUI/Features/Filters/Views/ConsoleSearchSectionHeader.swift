@@ -69,6 +69,8 @@ struct ConsoleSectionHeader: View {
                     .accessibilityHidden(true)
                 }
             }
+        } else {
+            Text("")
         }
     }
 #else

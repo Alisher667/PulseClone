@@ -9,31 +9,31 @@ import Pulse
 
 struct NetworkInspectorMetricsView: View {
     let viewModel: NetworkInspectorMetricsViewModel
-
+    
     var body: some View {
         if #available(iOS 14.0, *) {
 #if os(tvOS)
-        ForEach(viewModel.transactions) {
-            NetworkInspectorTransactionView(viewModel: $0)
-        }
-#else
-        return List {
             ForEach(viewModel.transactions) {
                 NetworkInspectorTransactionView(viewModel: $0)
             }
-        }
+#else
+            List {
+                ForEach(viewModel.transactions) {
+                    NetworkInspectorTransactionView(viewModel: $0)
+                }
+            }
 #if os(iOS)
-        .listStyle(.insetGrouped)
+            .listStyle(.insetGrouped)
 #endif
 #if os(macOS)
-        .backport.hideListContentBackground()
+            .backport.hideListContentBackground()
 #endif
 #if !os(macOS)
-        .navigationTitle("Metrics")
+            .navigationTitle("Metrics")
 #endif
 #endif
-        } else { 
-            return Text("")
+        } else {
+            Text("")
         }
     }
 }
@@ -44,9 +44,9 @@ final class NetworkInspectorMetricsViewModel {
     private(set) lazy var transactions = task.orderedTransactions.map {
         NetworkInspectorTransactionViewModel(transaction: $0, task: task)
     }
-
+    
     private let task: NetworkTaskEntity
-
+    
     init?(task: NetworkTaskEntity) {
         guard task.hasMetrics else { return nil }
         self.task = task

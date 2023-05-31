@@ -23,7 +23,11 @@ struct NetworkRequestBodyCell: View {
     }
 
     private var destination: some View {
-        return NetworkInspectorRequestBodyView(viewModel: viewModel.detailsViewModel)
+        if #available(iOS 14.0, *) {
+            return NetworkInspectorRequestBodyView(viewModel: viewModel.detailsViewModel)
+        } else {
+            return Text("")
+        }
     }
 }
 

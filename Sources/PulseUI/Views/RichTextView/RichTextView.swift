@@ -28,7 +28,7 @@ struct RichTextView: View {
 #if os(iOS)
     var body: some View {
         if #available(iOS 14.0, *) {
-            contents
+            return contents
                 .onAppear { viewModel.prepare(searchContext) }
                 .navigationBarItems(trailing: navigationBarTrailingItems)
                 .sheet(item: $shareItems, content: ShareView.init)
@@ -42,7 +42,7 @@ struct RichTextView: View {
                     }
                 }
         } else {
-            Text("")
+            return Text("")
         }
     }
     
@@ -87,8 +87,8 @@ struct RichTextView: View {
     
     @ViewBuilder
     private var navigationBarTrailingItems: some View {
-        if !isTextViewBarItemsHidden {
-            if #available(iOS 14.0, *) {
+        if #available(iOS 14.0, *) {
+            if !isTextViewBarItemsHidden {
                 Menu(content: {
                     AttributedStringShareMenu(shareItems: $shareItems) {
                         viewModel.textStorage
@@ -96,10 +96,8 @@ struct RichTextView: View {
                 }, label: {
                     Image(systemName: "square.and.arrow.up")
                 })
-            }
-            // TODO: This should be injected/added outside of the text view
-            if viewModel.contentType?.isHTML ?? false {
-                if #available(iOS 14.0, *) {
+                // TODO: This should be injected/added outside of the text view
+                if viewModel.contentType?.isHTML ?? false {
                     Menu(content: {
                         Section {
                             if viewModel.contentType?.isHTML == true {
@@ -113,6 +111,8 @@ struct RichTextView: View {
                     })
                 }
             }
+        } else {
+            Text("")
         }
     }
 #else
@@ -132,22 +132,22 @@ struct RichTextView: View {
 #if DEBUG
 struct RichTextView_Previews: PreviewProvider {
     static var previews: some View {
-//        if #available(iOS 14.0, *) {
-//            let textView = RichTextView(viewModel: makePreviewViewModel())
-//#if os(macOS)
-//            textView
-//                .background(Color(.textBackgroundColor))
-//                .frame(height: 600)
-//                .previewLayout(.sizeThatFits)
-//#else
-//            NavigationView {
-//                textView
-//                    .inlineNavigationTitle("Rich Text View")
-//            }
-//#endif
-//        } else {
+        if #available(iOS 14.0, *) {
+            let textView = RichTextView(viewModel: makePreviewViewModel())
+#if os(macOS)
+            textView
+                .background(Color(.textBackgroundColor))
+                .frame(height: 600)
+                .previewLayout(.sizeThatFits)
+#else
+            NavigationView {
+                textView
+                    .inlineNavigationTitle("Rich Text View")
+            }
+#endif
+        } else {
             Text("")
-//        }
+        }
     }
 }
 
@@ -171,6 +171,7 @@ private struct TextViewSearchContextKey: EnvironmentKey {
 
 @available(iOS 14.0, *)
 extension EnvironmentValues {
+    @available(iOS 14.0, *)
     var textViewSearchContext: RichTextViewModel.SearchContext? {
         get { self[TextViewSearchContextKey.self] }
         set { self[TextViewSearchContextKey.self] = newValue }

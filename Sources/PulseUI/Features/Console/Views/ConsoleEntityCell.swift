@@ -10,7 +10,7 @@ import CoreData
 @available(iOS 15, macOS 13, *)
 struct ConsoleEntityCell: View {
     let entity: NSManagedObject
-
+    
     var body: some View {
         switch LoggerEntity(entity) {
         case .message(let message):
@@ -30,23 +30,25 @@ struct ConsoleEntityCell: View {
 @available(iOS 15, macOS 13, *)
 private struct _ConsoleMessageCell: View {
     let message: LoggerMessageEntity
-
+    
     @State private var shareItems: ShareItems?
-
+    
     var body: some View {
+        if #available(iOS 14.0, *) {
 #if os(iOS)
-        let cell = ConsoleMessageCell(message: message, isDisclosureNeeded: true)
-            .background(NavigationLink("", destination: ConsoleMessageDetailsView(message: message)).opacity(0))
+            let cell = ConsoleMessageCell(message: message, isDisclosureNeeded: true)
+                .background(NavigationLink("", destination: ConsoleMessageDetailsView(message: message)).opacity(0))
 #elseif os(macOS)
-        let cell = ConsoleMessageCell(message: message)
-            .tag(ConsoleSelectedItem.entity(message.objectID))
+            let cell = ConsoleMessageCell(message: message)
+                .tag(ConsoleSelectedItem.entity(message.objectID))
 #else
-        // `id` is a workaround for macOS (needs to be fixed)
-        let cell = NavigationLink(destination: ConsoleMessageDetailsView(message: message)) {
-            ConsoleMessageCell(message: message)
-        }
+            // `id` is a workaround for macOS (needs to be fixed)
+            let cell = NavigationLink(destination: ConsoleMessageDetailsView(message: message)) {
+                ConsoleMessageCell(message: message)
+            }
 #endif
-
+        
+        
 #if os(iOS) || os(macOS)
         cell.swipeActions(edge: .leading, allowsFullSwipe: true) {
             PinButton(viewModel: .init(message)).tint(.pink)
@@ -67,6 +69,9 @@ private struct _ConsoleMessageCell: View {
 #else
         cell
 #endif
+        } else {
+            Text("")
+        }
     }
 }
 
@@ -74,50 +79,54 @@ private struct _ConsoleMessageCell: View {
 private struct _ConsoleTaskCell: View {
     let task: NetworkTaskEntity
     @State private var shareItems: ShareItems?
-    @State private var sharedTask: NetworkTaskEntity?
-
+    @State private var isSharing = false
+    
     var body: some View {
+        if #available(iOS 14.0, *) {
 #if os(iOS)
-        let cell = ConsoleTaskCell(task: task, isDisclosureNeeded: true)
-            .background(NavigationLink("", destination: NetworkInspectorView(task: task)).opacity(0))
+            let cell = ConsoleTaskCell(task: task, isDisclosureNeeded: true)
+                .background(NavigationLink("", destination: NetworkInspectorView(task: task)).opacity(0))
 #elseif os(macOS)
-        let cell = ConsoleTaskCell(task: task)
-            .tag(ConsoleSelectedItem.entity(task.objectID))
+            let cell = ConsoleTaskCell(task: task)
+                .tag(ConsoleSelectedItem.entity(task.objectID))
 #else
-        let cell = NavigationLink(destination: NetworkInspectorView(task: task)) {
-            ConsoleTaskCell(task: task)
-        }
+            let cell = NavigationLink(destination: NetworkInspectorView(task: task)) {
+                ConsoleTaskCell(task: task)
+            }
 #endif
-
+            
 #if os(iOS) || os(macOS)
-        cell.swipeActions(edge: .leading, allowsFullSwipe: true) {
-            PinButton(viewModel: .init(task)).tint(.pink)
-        }
-        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-            Button(action: {
+            cell.swipeActions(edge: .leading, allowsFullSwipe: true) {
+                PinButton(viewModel: .init(task)).tint(.pink)
+            }
+            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                Button(action: {
 #if os(iOS)
-                shareItems = ShareService.share(task, as: .html)
+                    shareItems = ShareService.share(task, as: .html)
 #else
-                sharedTask = task
+                    sharedTask = task
 #endif
-            }) {
-                Label("Share", systemImage: "square.and.arrow.up.fill")
-            }.tint(.blue)
-        }
-        .contextMenu {
+                }) {
+                    Label("Share", systemImage: "square.and.arrow.up.fill")
+                }.tint(.blue)
+            }
+            .contextMenu {
 #if os(iOS)
-            ContextMenu.NetworkTaskContextMenuItems(task: task, sharedItems: $shareItems)
+                ContextMenu.NetworkTaskContextMenuItems(task: task, sharedItems: $shareItems)
 #else
-            ContextMenu.NetworkTaskContextMenuItems(task: task, sharedTask: $sharedTask)
+                ContextMenu.NetworkTaskContextMenuItems(task: task, sharedTask: $sharedTask)
 #endif
-        }
+            }
 #if os(iOS)
-        .sheet(item: $shareItems, content: ShareView.init)
+            .sheet(item: $shareItems, content: ShareView.init)
 #else
-        .popover(item: $sharedTask, attachmentAnchor: .point(.leading), arrowEdge: .leading) { ShareNetworkTaskView(task: $0) }
+            .popover(item: $sharedTask, attachmentAnchor: .point(.leading), arrowEdge: .leading) { ShareNetworkTaskView(task: $0) }
 #endif
 #else
-        cell
+            cell
 #endif
+        } else {
+            Text("")
+        }
     }
 }

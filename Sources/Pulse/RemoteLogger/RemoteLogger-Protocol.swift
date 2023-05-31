@@ -210,7 +210,6 @@ extension RemoteLogger {
         let version: String
     }
 }
-
 @available(iOS 14.0, *)
 extension RemoteLogger.Connection {
     func send(code: RemoteLogger.PacketCode, data: Data) {

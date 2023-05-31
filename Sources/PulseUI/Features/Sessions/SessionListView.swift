@@ -27,14 +27,18 @@ struct SessionListView: View {
     @Environment(\.store) private var store
 
     var body: some View {
-        if sessions.isEmpty {
-            Text("No Recorded Sessions")
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .foregroundColor(.secondary)
+        if #available(iOS 14.0, *) {
+            if sessions.isEmpty {
+                Text("No Recorded Session")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .foregroundColor(.secondary)
+            } else {
+                content
+                    .onAppear { refreshGroups() }
+                    .onChange(of: sessions.count) { _ in refreshGroups() }
+            }
         } else {
-            content
-                .onAppear { refreshGroups() }
-                .onChange(of: sessions.count) { _ in refreshGroups() }
+            Text("")
         }
     }
 
@@ -117,6 +121,7 @@ struct SessionListView: View {
 
     @ViewBuilder
     private func makeCell(for session: LoggerSessionEntity) -> some View {
+        if #available(iOS 14.0, *) {
         ConsoleSessionCell(session: session, isCompact: filterTerm.isEmpty)
             .swipeActions {
                 Button(action: {
@@ -126,11 +131,14 @@ struct SessionListView: View {
                 }, label: {
                     Label("Delete", systemImage: "trash")
                 }).tint(Color.red)
-
+                
                 Button(action: { sharedSessions = .init(ids: [session.id]) }) {
                     Label("Share", systemImage: "square.and.arrow.up.fill")
                 }.tint(.blue)
             }
+        } else {
+            Text("")
+        }
     }
 
     private func getFilteredSessions() -> [LoggerSessionEntity] {

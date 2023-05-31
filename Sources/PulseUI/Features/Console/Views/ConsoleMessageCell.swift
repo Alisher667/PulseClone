@@ -7,16 +7,18 @@ import Pulse
 import CoreData
 import Combine
 
-@available(iOS 15, *)
+@available(iOS 14.0, *)
 struct ConsoleMessageCell: View {
     let message: LoggerMessageEntity
     var isDisclosureNeeded = false
-
+    
     @ObservedObject private var settings: UserSettings = .shared
-
+    
     var body: some View {
         let contents = VStack(alignment: .leading, spacing: 4) {
-            header.dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+            if #available(iOS 15.0, *) {
+                header.dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+            }
             Text(message.text)
                 .font(ConsoleConstants.fontBody)
                 .foregroundColor(.textColor(for: message.logLevel))
@@ -32,7 +34,7 @@ struct ConsoleMessageCell: View {
         }
 #endif
     }
-
+    
     @ViewBuilder
     private var header: some View {
         HStack {
@@ -48,19 +50,21 @@ struct ConsoleMessageCell: View {
 #if os(macOS) || os(iOS)
             PinView(message: message)
 #endif
-            HStack(spacing: 3) {
-                Text(ConsoleMessageCell.timeFormatter.string(from: message.createdAt))
-                    .lineLimit(1)
-                    .font(ConsoleConstants.fontInfo)
-                    .monospacedDigit()
-                    .foregroundColor(.secondary)
-                if isDisclosureNeeded {
-                    ListDisclosureIndicator()
+            if #available(iOS 15.0, *) {
+                HStack(spacing: 3) {
+                    Text(ConsoleMessageCell.timeFormatter.string(from: message.createdAt))
+                        .lineLimit(1)
+                        .font(ConsoleConstants.fontInfo)
+                        .monospacedDigit()
+                        .foregroundColor(.secondary)
+                    if isDisclosureNeeded {
+                        ListDisclosureIndicator()
+                    }
                 }
             }
-        }
+        }   
     }
-
+    
     private var title: String {
         var title = message.logLevel.name.capitalized
         if message.label != "default" {
@@ -68,11 +72,11 @@ struct ConsoleMessageCell: View {
         }
         return title
     }
-
+    
     var titleColor: Color {
         message.logLevel >= .warning ? .textColor(for: message.logLevel) : .secondary
     }
-
+    
     static let timeFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US")

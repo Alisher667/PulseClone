@@ -9,22 +9,24 @@ struct Checkbox<Label: View>: View {
     let label: () -> Label
 
     var body: some View {
+        if #available(iOS 14.0, *) {
 #if os(iOS)
-        Button(action: { isOn.toggle() }) {
-            HStack {
-                if #available(iOS 14.0, *) {
-                Image(systemName: isOn ? "checkmark.circle.fill" : "circle")
-                    .font(.title3)
-                    .foregroundColor(isOn ? .blue : .separator)
+            Button(action: { isOn.toggle() }) {
+                HStack {
+                    Image(systemName: isOn ? "checkmark.circle.fill" : "circle")
+                        .font(.title3)
+                        .foregroundColor(isOn ? .blue : .separator)
+                    label()
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                label()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .contentShape(Rectangle())
-        }.buttonStyle(.plain)
+                .contentShape(Rectangle())
+            }.buttonStyle(.plain)
 #else
-        Toggle(isOn: $isOn, label: label)
+            Toggle(isOn: $isOn, label: label)
 #endif
+        } else {
+            Text("")
+        }
     }
 }
 

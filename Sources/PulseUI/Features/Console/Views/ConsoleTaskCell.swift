@@ -7,7 +7,7 @@ import Pulse
 import Combine
 import CoreData
 
-@available(iOS 15, *)
+@available(iOS 14.0, *)
 struct ConsoleTaskCell: View {
     @ObservedObject var task: NetworkTaskEntity
     var isDisclosureNeeded = false
@@ -22,7 +22,9 @@ struct ConsoleTaskCell: View {
 #endif
         
         let contents = VStack(alignment: .leading, spacing: spacing) {
-            title.dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+            if #available(iOS 15.0, *) {
+                title.dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+            }
             message
 #if !os(macOS)
             details
@@ -68,11 +70,15 @@ struct ConsoleTaskCell: View {
     }
     
     private var time: some View {
-        Text(ConsoleMessageCell.timeFormatter.string(from: task.createdAt))
-            .lineLimit(1)
-            .font(ConsoleConstants.fontInfo)
-            .foregroundColor(.secondary)
-            .monospacedDigit()
+        if #available(iOS 15.0, *) {
+            return Text(ConsoleMessageCell.timeFormatter.string(from: task.createdAt))
+                .lineLimit(1)
+                .font(ConsoleConstants.fontInfo)
+                .foregroundColor(.secondary)
+                .monospacedDigit()
+        } else {
+            return Text("")
+        }
     }
     
     private var message: some View {

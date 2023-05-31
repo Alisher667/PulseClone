@@ -29,31 +29,34 @@ struct NetworkInspectorView: View {
             }
             .inlineNavigationTitle(task.title)
             .sheet(item: $shareItems, content: ShareView.init)
+        } else {
+            Text("")
         }
     }
 
     @ViewBuilder
     private var contents: some View {
-        Section { NetworkInspectorView.makeHeaderView(task: task) }
-            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-            .listRowBackground(Color.clear)
-        Section {
-            NetworkRequestStatusSectionView(viewModel: .init(task: task))
-        }
-        Section {
-            NetworkInspectorView.makeRequestSection(task: task, isCurrentRequest: isCurrentRequest)
-        } header: { requestTypePicker }
-        if task.state != .pending {
+        if #available(iOS 14.0, *) {
+            Section { NetworkInspectorView.makeHeaderView(task: task) }
+                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                .listRowBackground(Color.clear)
             Section {
-                NetworkInspectorView.makeResponseSection(task: task)
+                NetworkRequestStatusSectionView(viewModel: .init(task: task))
             }
-            if #available(iOS 14.0, *) {
+            Section {
+                NetworkInspectorView.makeRequestSection(task: task, isCurrentRequest: isCurrentRequest)
+            } header: { requestTypePicker }
+            if task.state != .pending {
+                Section {
+                    NetworkInspectorView.makeResponseSection(task: task)
+                }
                 Section {
                     NetworkMetricsCell(task: task)
                     NetworkCURLCell(task: task)
                 }
-            } else { 
             }
+        } else {
+            Text("")
         }
     }
 
@@ -74,22 +77,24 @@ struct NetworkInspectorView: View {
     @ViewBuilder
     private var trailingNavigationBarItems: some View {
         if #available(iOS 14.0, *) {
-             PinButton(viewModel: PinButtonViewModel(task), isTextNeeded: false)
-             Menu(content: {
-                 AttributedStringShareMenu(shareItems: $shareItems) {
-                     TextRenderer(options: .sharing).make { $0.render(task, content: .sharing) }
-                 }
-                 Button(action: { shareItems = ShareItems([task.cURLDescription()]) }) {
-                     Label("Share as cURL", systemImage: "square.and.arrow.up")
-                 }
-             }, label: {
-                 Image(systemName: "square.and.arrow.up")
-             })
-             Menu(content: {
-                 ContextMenu.NetworkTaskContextMenuItems(task: task, sharedItems: $shareItems)
-             }, label: {
-                 Image(systemName: "ellipsis.circle")
-             })
+            PinButton(viewModel: PinButtonViewModel(task), isTextNeeded: false)
+            Menu(content: {
+                AttributedStringShareMenu(shareItems: $shareItems) {
+                    TextRenderer(options: .sharing).make { $0.render(task, content: .sharing) }
+                }
+                Button(action: { shareItems = ShareItems([task.cURLDescription()]) }) {
+                    Label("Share as cURL", systemImage: "square.and.arrow.up")
+                }
+            }, label: {
+                Image(systemName: "square.and.arrow.up")
+            })
+            Menu(content: {
+                ContextMenu.NetworkTaskContextMenuItems(task: task, sharedItems: $shareItems)
+            }, label: {
+                Image(systemName: "ellipsis.circle")
+            })
+        } else {
+            Text("")
         }
     }
 }

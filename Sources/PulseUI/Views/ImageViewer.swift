@@ -26,12 +26,12 @@ struct ImageViewer: View {
         }.padding()
     }
 }
-
 @available(iOS 14.0, *)
 struct ImagePreviewViewModel {
     let image: UXImage
     let info: NSAttributedString
 
+   
     init(image: UXImage, data: Data, context: FileViewerViewModel.Context) {
         func intValue(for key: String) -> Int? {
             context.metadata?[key].flatMap { Int($0) }

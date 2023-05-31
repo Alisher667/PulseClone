@@ -34,50 +34,58 @@ struct SessionsView: View {
 
     @ViewBuilder
     private var content: some View {
-        list
+        if #available(iOS 14.0, *) {
+            list
 #if os(iOS)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(editMode.isEditing ? "Done" : "Edit") {
-                        withAnimation {
-                            editMode = editMode.isEditing ? .inactive : .active
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(editMode.isEditing ? "Done" : "Edit") {
+                            withAnimation {
+                                editMode = editMode.isEditing ? .inactive : .active
+                            }
+                        }
+                    }
+                    ToolbarItem(placement: .bottomBar) {
+                        if editMode == .active {
+                            bottomBar
                         }
                     }
                 }
-                ToolbarItem(placement: .bottomBar) {
-                    if editMode == .active {
-                        bottomBar
-                    }
+                .sheet(item: $sharedSessions) { sessions in
+                    NavigationView {
+                        ShareStoreView(sessions: sessions.ids, onDismiss: { sharedSessions = nil })
+                    }.backport.presentationDetents([.medium, .large])
                 }
-            }
-            .sheet(item: $sharedSessions) { sessions in
-                NavigationView {
-                    ShareStoreView(sessions: sessions.ids, onDismiss: { sharedSessions = nil })
-                }.backport.presentationDetents([.medium, .large])
-            }
 #else
-            .popover(item: $sharedSessions, arrowEdge: .leading) { sessions in
-                ShareStoreView(sessions: sessions.ids, onDismiss: { sharedSessions = nil })
-                    .frame(width: 240).fixedSize()
-            }
+                .popover(item: $sharedSessions, arrowEdge: .leading) { sessions in
+                    ShareStoreView(sessions: sessions.ids, onDismiss: { sharedSessions = nil })
+                        .frame(width: 240).fixedSize()
+                }
 #endif
+        } else {
+            Text("")
+        }
     }
 
     private var list: some View {
-        SessionListView(selection: $selection, sharedSessions: $sharedSessions)
+        if #available(iOS 14.0, *) {
+            return SessionListView(selection: $selection, sharedSessions: $sharedSessions)
 #if os(iOS)
-            .environment(\.editMode, $editMode)
-            .onChange(of: selection) {
-                guard !editMode.isEditing, !$0.isEmpty else { return }
-                showInConsole(sessions: $0)
-            }
+                .environment(\.editMode, $editMode)
+                .onChange(of: selection) {
+                    guard !editMode.isEditing, !$0.isEmpty else { return }
+                    showInConsole(sessions: $0)
+                }
 #else
-            .contextMenu(forSelectionType: UUID.self, menu: contextMenu)
-            .onChange(of: selection) {
-                guard filters.criteria.shared.sessions.selection != $0 else { return }
-                filters.select(sessions: $0)
-            }
+                .contextMenu(forSelectionType: UUID.self, menu: contextMenu)
+                .onChange(of: selection) {
+                    guard filters.criteria.shared.sessions.selection != $0 else { return }
+                    filters.select(sessions: $0)
+                }
 #endif
+        } else {
+            return Text("")
+        }
     }
 
 #if os(iOS)
@@ -106,13 +114,15 @@ struct SessionsView: View {
             })
             .disabled(selection.isEmpty)
 
-            Menu(content: {
-                Button("Show in Console") {
-                    showInConsole(sessions: selection)
-                }.disabled(selection.isEmpty)
-            }, label: {
-                Image(systemName: "ellipsis.circle")
-            })
+            if #available(iOS 14.0, *) {
+                Menu(content: {
+                    Button("Show in Console") {
+                        showInConsole(sessions: selection)
+                    }.disabled(selection.isEmpty)
+                }, label: {
+                    Image(systemName: "ellipsis.circle")
+                })
+            }
         }
     }
 

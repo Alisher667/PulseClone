@@ -41,6 +41,7 @@ extension NetworkTaskEntity: Identifiable {
     public var id: NSManagedObjectID { objectID }
 }
 
+@available(iOS 14.0, *)
 extension NetworkTaskEntity {
     var title: String {
         url.flatMap(URL.init(string:))?.lastPathComponent ?? "Request"
