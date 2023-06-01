@@ -259,6 +259,8 @@
 		0CFF79DD29EB7A8E00BE767B /* SessionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CFF79DB29EB7A8B00BE767B /* SessionListView.swift */; };
 		0CFF79DF29EB7B4300BE767B /* SessionPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CFF79DE29EB7B4300BE767B /* SessionPickerView.swift */; };
 		0CFF79E229EC1FA200BE767B /* ImageProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CFF79E029EC1F7800BE767B /* ImageProcessor.swift */; };
+		8EA9D54F2A285A8E00CE3A11 /* TaskMessageBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA9D54D2A285A6100CE3A11 /* TaskMessageBuilder.swift */; };
+		8EA9D5532A285BBF00CE3A11 /* ConsoleSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA9D5512A285B3200CE3A11 /* ConsoleSettings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -692,6 +694,8 @@
 		0CFF79E029EC1F7800BE767B /* ImageProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProcessor.swift; sourceTree = "<group>"; };
 		49E82A8526D107A00070244F /* AlamofireIntegration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlamofireIntegration.swift; sourceTree = "<group>"; };
 		49E82A8826D1083D0070244F /* MoyaIntegration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoyaIntegration.swift; sourceTree = "<group>"; };
+		8EA9D54D2A285A6100CE3A11 /* TaskMessageBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskMessageBuilder.swift; sourceTree = "<group>"; };
+		8EA9D5512A285B3200CE3A11 /* ConsoleSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleSettings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1276,6 +1280,7 @@
 				0CF0D5D2296F189500EED9D4 /* SettingsView-ios.swift */,
 				0CF0D5D5296F189500EED9D4 /* SettingsView-macos.swift */,
 				0CF0D5CF296F189500EED9D4 /* SettingsView-watchos-tvos.swift */,
+				8EA9D5512A285B3200CE3A11 /* ConsoleSettings.swift */,
 				0CF0D5D1296F189500EED9D4 /* SettingsViewModel.swift */,
 				0CF0D5D0296F189500EED9D4 /* RemoteLoggerSettingsView.swift */,
 				0CF0D5D3296F189500EED9D4 /* UserSettings.swift */,
@@ -1349,6 +1354,7 @@
 				0CBEF6A429DF69E800132FB3 /* ConsoleView.swift */,
 				0CF0D60A296F189600EED9D4 /* ConsoleEnvironment.swift */,
 				0CECF63C2996BE12000F9CCD /* ConsoleDataSource.swift */,
+				8EA9D54D2A285A6100CE3A11 /* TaskMessageBuilder.swift */,
 			);
 			path = Console;
 			sourceTree = "<group>";
@@ -1936,8 +1942,10 @@
 				0CF0D66F296F189600EED9D4 /* NetworkInspectorView-watchos.swift in Sources */,
 				0CF0D671296F189600EED9D4 /* NetworkInspectorResponseBodyView.swift in Sources */,
 				0CF0D65B296F189600EED9D4 /* SettingsView-macos.swift in Sources */,
+				8EA9D5532A285BBF00CE3A11 /* ConsoleSettings.swift in Sources */,
 				0CFF79DD29EB7A8E00BE767B /* SessionListView.swift in Sources */,
 				0CF0D626296F189600EED9D4 /* FileViewer.swift in Sources */,
+				8EA9D54F2A285A8E00CE3A11 /* TaskMessageBuilder.swift in Sources */,
 				0C40C09A296F77F1009ECF16 /* ConsoleSearchToggleCell.swift in Sources */,
 				0C63A380297A02D200F6A6A5 /* StringSearchOptions.swift in Sources */,
 				0CF0D656296F189600EED9D4 /* RemoteLoggerSettingsView.swift in Sources */,
